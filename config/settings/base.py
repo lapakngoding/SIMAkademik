@@ -18,6 +18,8 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 THEME = env('THEME', default='default')
 
 DJANGO_APPS = [
+    "adminlte3",
+    "adminlte3_theme",
     "django_ckeditor_5",
     'django.contrib.admin',
     'django.contrib.auth',
