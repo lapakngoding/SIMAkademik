@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SIMSekolah | Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    
+  <div class="col-lg-3 col-6">
+    <div class="small-box bg-info">
+  <div class="inner">
+    <h3>{{ total_siswa }}</h3>
+    <p>Total Siswa</p>
+  </div>
+  <div class="icon">
+    <i class="fas fa-user-graduate"></i>
+  </div>
+  <a href="#" class="small-box-footer">
+    Detail <i class="fas fa-arrow-circle-right"></i>
+  </a>
+</div>
+  </div>
+  
+</div>
+
+{% endblock %}

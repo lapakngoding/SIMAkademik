@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}SIMSekolah{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+
+  <!-- AdminLTE -->
+  <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include "admin/partials/navbar.html" %}
+  {% include "admin/partials/sidebar.html" %}
+
+  <div class="content-wrapper">
+
+    {% include "admin/partials/breadcrumbs.html" %}
+
+    <section class="content pt-3">
+      <div class="container-fluid">
+        {% block content %}{% endblock %}
+      </div>
+    </section>
+  </div>
+
+  {% include "admin/partials/footer.html" %}
+
+</div>
+
+<!-- jQuery -->
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+
+<!-- Bootstrap 4 -->
+<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- AdminLTE -->
+<script src="{% static 'adminlte/js/adminlte.min.js' %}"></script>
+
+{% block extra_js %}
+<script>
+  (function () {
+    // ===== CONFIG =====
+    const IDLE_LIMIT = 15 * 60 * 1000; // 15 menit
+    let idleTimer = null;
+
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(logoutUser, IDLE_LIMIT);
+    }
+
+    function logoutUser() {
+      console.warn("Idle timeout, logging out...");
+      document.getElementById("idle-logout-form").submit();
+    }
+
+    // Event yang dianggap aktivitas
+    [
+      "mousemove",
+      "keydown",
+      "mousedown",
+      "touchstart",
+      "scroll"
+    ].forEach(event => {
+      document.addEventListener(event, resetIdleTimer, true);
+    });
+
+    // start timer pertama kali
+    resetIdleTimer();
+  })();
+</script>
+
+<script>
+(function () {
+  const IDLE_LIMIT = 10 * 60 * 1000;
+  let idleTimer = null;
+
+  function lockUser() {
+    window.location.href = "{% url 'accounts:lock_screen' %}";
+  }
+
+  function resetIdleTimer() {
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(lockUser, IDLE_LIMIT);
+  }
+
+  ["mousemove", "keydown", "mousedown", "scroll", "touchstart"]
+    .forEach(evt =>
+      document.addEventListener(evt, resetIdleTimer, true)
+    );
+
+  resetIdleTimer();
+})();
+</script>
+
+{% endblock %}
+
+
+<form id="idle-logout-form"
+      method="post"
+      action="{% url 'logout' %}"
+      style="display:none;">
+  {% csrf_token %}
+</form>
+
+</body>
+</html>

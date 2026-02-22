@@ -1,0 +1,43 @@
+"""
+URL configuration for school_system project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/6.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from apps.accounts.views import RoleBasedLoginView
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+
+    # LOGIN (custom, role-based)
+    path('login/', RoleBasedLoginView.as_view(), name='login'),
+
+    # LOGOUT
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    # APPS
+    path('accounts/', include('apps.accounts.urls')),
+    path('dashboard/', include('apps.dashboard.urls')),
+    path('students/', include('apps.students.urls')),
+    path('teachers/', include('apps.teachers.urls')),
+    path('academics/', include('apps.academics.urls')),
+    path('attendance/', include('apps.attendance.urls')),
+    path('grades/', include('apps.grades.urls')),
+    path('announcements/', include('apps.announcements.urls')),
+
+    # PUBLIC WEBSITE
+    path('', include('apps.website.urls')),
+]

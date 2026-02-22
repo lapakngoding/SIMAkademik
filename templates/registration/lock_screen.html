@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Locked | SIMSekolah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+</head>
+
+<body class="hold-transition lockscreen">
+
+<div class="lockscreen-wrapper">
+  <div class="lockscreen-logo">
+    <b>SIM</b>Sekolah
+  </div>
+
+  <div class="lockscreen-name">
+    {{ request.user.get_full_name|default:request.user.username }}
+  </div>
+
+  <div class="lockscreen-item">
+    <div class="lockscreen-image">
+      <i class="fas fa-user-circle fa-4x"></i>
+    </div>
+
+    <form class="lockscreen-credentials"
+          method="post"
+          action="{% url 'unlock_screen' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="password"
+               name="password"
+               class="form-control"
+               placeholder="Masukkan password"
+               autofocus>
+
+        <div class="input-group-append">
+          <button type="submit" class="btn">
+            <i class="fas fa-arrow-right text-muted"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% if messages %}
+    <div class="text-danger text-center mt-2">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="help-block text-center">
+    Session masih aktif, masukkan password untuk lanjut
+  </div>
+
+  <div class="text-center">
+    <a href="{% url 'logout' %}">Login dengan akun lain</a>
+  </div>
+</div>
+
+</body>
+</html>
+

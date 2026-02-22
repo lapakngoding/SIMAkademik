@@ -1,0 +1,197 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Profil Saya{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- PROFILE HEADER -->
+  <div class="card card-widget widget-user">
+    <div class="widget-user-header bg-primary">
+      <h3 class="widget-user-username">
+       {{ profile.nama_lengkap|default:request.user.username }}
+      </h3>
+      <h5 class="widget-user-desc">
+        {{ request.user.groups.first.name|default:"Pengguna Sistem" }}
+      </h5>
+    </div>
+
+    <div class="widget-user-image">
+      <img class="img-circle elevation-2"
+           src="{% static 'img/user.png' %}"
+           alt="User Avatar">
+    </div>
+
+    <div class="card-footer">
+      <div class="row text-center">
+        <div class="col-sm-4 border-right">
+          <b>Username</b><br>{{ request.user.username }}
+        </div>
+        <div class="col-sm-4 border-right">
+          <b>Email</b><br>{{ request.user.email|default:"-" }}
+        </div>
+        <div class="col-sm-4">
+          <b>Last Login</b><br>{{ request.user.last_login|date:"d M Y H:i" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="card">
+    <div class="card-header p-2">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#data-pribadi">Data Pribadi</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#kepegawaian">Kepegawaian</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#akun">Akun</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#dokumen">Dokumen</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <div class="tab-content">
+
+        <!-- DATA PRIBADI -->
+        <div class="active tab-pane" id="data-pribadi">
+          <p class="text-muted">Data identitas pribadi pengguna.</p>
+
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Nama Lengkap</label>
+                  {{ profile_form.nama_lengkap }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>NIK</label>
+                  {{ profile_form.nik }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Jenis Kelamin</label>
+                  {{ profile_form.jenis_kelamin }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Tempat Lahr</label>
+                  {{ profile_form.tempat_lahir }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Tanggal Lahir</label>
+                  {{ profile_form.tanggal_lahir }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Nama Ibu Kandung</label>
+                  {{ profile_form.nama_ibu_kandung }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Domisili</label>
+                  {{ profile_form.alamat_rumah }}
+                </div>
+              </div>
+            </div>
+           <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>No Hp</label>
+                  {{ profile_form.no_hp }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Email Pribadi</label>
+                  {{ profile_form.email_pribadi }}
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              Simpan Perubahan
+            </button>
+        </div>
+
+        <!-- KEPEGAWAIAN -->
+        <div class="tab-pane" id="kepegawaian">
+          <p class="text-muted">Informasi kepegawaian / kedinasan.</p>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>NUPTK</label>
+                  {{ profile_form.nip_nuptk }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Jabatan</label>
+                  {{ profile_form.jabatan }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Golongan</label>
+                  {{ profile_form.pangkat_golongan }}
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              Simpan Perubahan
+            </button>
+          </form>
+        </div>
+
+        <!-- AKUN -->
+        <div class="tab-pane" id="akun">
+          <p class="text-muted">Pengaturan akun dan keamanan.</p>
+        </div>
+
+        <!-- DOKUMEN -->
+        <div class="tab-pane" id="dokumen">
+          <p class="text-muted">Upload dokumen pendukung.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
