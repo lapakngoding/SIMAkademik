@@ -64,7 +64,7 @@ MIDDLEWARE += [
     'apps.accounts.middleware.LockScreenMiddleware',
 ]
 
-ROOT_URLCONF = 'school_system.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
