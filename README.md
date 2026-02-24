@@ -5,17 +5,13 @@ Modern School Management System Built with Django
 ✨ About SIMAkademik
 
 SIMAkademik adalah sistem manajemen akademik berbasis web yang dirancang untuk membantu sekolah dalam:
-
-Mengelola data siswa & guru
-
-Mengatur mata pelajaran & kelas
-
-Mencatat absensi
-
-Mengelola nilai
-
-Mengatur hak akses berbasis role
-
+<ul>
+  <li>Mengelola data siswa & guru</li>
+  <li>Mengatur mata pelajaran & kelas</li>
+  <li>Mencatat absensi</li>
+  <li>Mengelola nilai</li>
+  <li>Mengatur hak akses berbasis role</li>
+</ul>
 Dirancang dengan arsitektur modular agar mudah dikembangkan menjadi sistem skala besar atau SaaS.
 
 🚀 Features
