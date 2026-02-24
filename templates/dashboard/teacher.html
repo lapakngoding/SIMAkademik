@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard Teacher{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>Dashboard Teacher</h1>
+    </section>
+    <section class="content">
+        <p>Halo, {{ request.user.username }}. Selamat datang di sistem akademik.</p>
+        </section>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard Student{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>Dashboard Siswa</h1>
+    </section>
+    <section class="content">
+        <p>Halo, {{ request.user.username }}. Selamat datang di sistem akademik.</p>
+        <div class="user-info">
+            <h3>Halo, {{ profile.nama_lengkap }}!</h3>
+            <p>NISN: {{ detail.nisn }}</p>
+            <p>Kelas: {{ detail.kelas }}</p>
+        </div>
+    </section>
+</div>
+{% endblock %}
