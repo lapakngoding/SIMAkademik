@@ -59,6 +59,6 @@ SIMAkademik/
 <hr>
 
 <div align="center">
-  <p>Developed with ❤️ by <b>LapakNgoding</b></p>
+  <p>Developed with ❤️ by <b>FazCode</b></p>
   <p><em>License: MIT</em></p>
 </div>
