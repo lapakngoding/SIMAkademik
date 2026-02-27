@@ -172,3 +172,90 @@ def teacher_delete(request, pk):
         messages.success(request, 'Guru berhasil dihapus!')
         return redirect('accounts:teacher_list')
     return render(request, 'accounts/teacher_confirm_delete.html', {'teacher': teacher})
+
+# LIST SISWA
+@admin_only
+def student_list(request):
+    students = User.objects.filter(role='student')
+    return render(request, 'accounts/student_list.html', {'students': students})
+
+@admin_only
+def student_create(request):
+    u_form = UserForm()
+    p_form = BaseProfileForm()
+    s_form = StudentProfileForm()
+
+    if request.method == 'POST':
+        u_form = UserForm(request.POST)
+        p_form = BaseProfileForm(request.POST)
+        s_form = StudentProfileForm(request.POST)
+        
+        if u_form.is_valid() and p_form.is_valid() and s_form.is_valid():
+            user = u_form.save(commit=False)
+            user.set_password(u_form.cleaned_data.get('password'))
+            user.role = 'student'
+            user.is_active = True
+            user.save()
+            
+            # Update Profile (Signal otomatis buat UserProfile & StudentProfile)
+            profile = user.userprofile
+            student_detail = getattr(profile, 'student_detail', None)
+            
+            if not student_detail:
+                student_detail = StudentProfile.objects.create(user_profile=profile)
+            
+            p_form = BaseProfileForm(request.POST, request.FILES, instance=profile)
+            s_form = StudentProfileForm(request.POST, instance=student_detail)
+            
+            if p_form.is_valid() and s_form.is_valid():
+                p_form.save()
+                s_form.save()
+                messages.success(request, f'Siswa {user.username} berhasil ditambah!')
+                return redirect('accounts:student_list')
+
+    return render(request, 'accounts/student_form.html', {
+        'u_form': u_form, 'p_form': p_form, 's_form': s_form, 'title': 'Tambah Siswa'
+    })
+
+@admin_only
+def student_edit(request, pk):
+    student = get_object_or_404(User, pk=pk)
+    profile = student.userprofile
+    
+    # Ambil detail. Jika tidak ada, biarkan None dulu (jangan get_or_create)
+    detail = StudentProfile.objects.filter(user_profile=profile).first()
+
+    if request.method == 'POST':
+        u_form = UserForm(request.POST, instance=student)
+        p_form = BaseProfileForm(request.POST, instance=profile)
+        s_form = StudentProfileForm(request.POST, instance=detail)
+        
+        if u_form.is_valid() and p_form.is_valid() and s_form.is_valid():
+            # 1. Simpan User
+            user = u_form.save(commit=False)
+            new_password = u_form.cleaned_data.get('password')
+            if new_password:
+                user.set_password(new_password)
+            user.save()
+            
+            # 2. Simpan Profile Utama
+            p_form.save()
+            
+            # 3. Simpan Student Detail (Logika penyelamat)
+            student_detail = s_form.save(commit=False)
+            if not detail:
+                # Jika tadi detailnya None (belum ada di DB), hubungkan ke profile sekarang
+                student_detail.user_profile = profile
+            student_detail.save()
+            
+            messages.success(request, 'Data siswa berhasil diperbarui!')
+            return redirect('accounts:student_list')
+    else:
+        u_form = UserForm(instance=student)
+        u_form.fields['password'].initial = ""
+        p_form = BaseProfileForm(instance=profile)
+        s_form = StudentProfileForm(instance=detail)
+
+    return render(request, 'accounts/student_form.html', {
+        'u_form': u_form, 'p_form': p_form, 's_form': s_form, 'title': 'Edit Siswa'
+    })
