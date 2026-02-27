@@ -23,7 +23,6 @@ class UserProfile(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nama_lengkap = models.CharField(max_length=150, blank=True)
 
     # ======================
     # Identitas Pribadi
@@ -38,9 +37,9 @@ class UserProfile(models.Model):
     # ======================
     # Kepegawaian
     # ======================
-    nip_nuptk = models.CharField(max_length=30, blank=True)
-    jabatan = models.CharField(max_length=100, blank=True)
-    pangkat_golongan = models.CharField(max_length=50, blank=True)
+    #nip_nuptk = models.CharField(max_length=30, blank=True)
+    #jabatan = models.CharField(max_length=100, blank=True)
+    #pangkat_golongan = models.CharField(max_length=50, blank=True)
 
     # ======================
     # Unit Kerja
@@ -74,3 +73,17 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+
+class TeacherProfile(models.Model):
+    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='teacher_detail')
+    nip_nuptk = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    jabatan = models.CharField(max_length=100)
+    pangkat_golongan = models.CharField(max_length=50, blank=True)
+    # Atribut khusus guru lainnya...
+
+class StudentProfile(models.Model):
+    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='student_detail')
+    nisn = models.CharField(max_length=20, unique=True)
+    kelas = models.CharField(max_length=20)
+    nama_ibu_kandung = models.CharField(max_length=150, blank=True)
+    # Atribut khusus siswa lainnya...
