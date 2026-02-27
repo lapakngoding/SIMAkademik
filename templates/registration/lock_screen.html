@@ -28,7 +28,7 @@
 
     <form class="lockscreen-credentials"
           method="post"
-          action="{% url 'unlock_screen' %}">
+          action="{% url 'accounts:unlock_screen' %}">
       {% csrf_token %}
       <div class="input-group">
         <input type="password"

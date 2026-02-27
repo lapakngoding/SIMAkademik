@@ -3,17 +3,19 @@
   <a href="{% url 'dashboard' %}" class="brand-link">
     <span class="brand-text font-weight-light">SIMSekolah</span>
   </a>
+{% load account_tags %}
 
+{% user_profile_info %}
   <div class="sidebar">
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 
         {% if user.is_superuser %}
           {% include "admin/menu/admin_menu.html" %}
-        {% elif user.groups.first.name == "Guru" %}
-          {% include "admin/menu/guru_menu.html" %}
+        {% elif user.groups.first.name == "Teacher" %}
+          {% include "dashboard/teachers/_menu.html" %}
         {% else %}
-          {% include "admin/menu/siswa_menu.html" %}
+          {% include "dashboard/students/_menu.html" %}
         {% endif %}
 
       </ul>

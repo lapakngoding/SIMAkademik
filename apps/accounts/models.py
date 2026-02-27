@@ -87,3 +87,7 @@ class StudentProfile(models.Model):
     kelas = models.CharField(max_length=20)
     nama_ibu_kandung = models.CharField(max_length=150, blank=True)
     # Atribut khusus siswa lainnya...
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7cbebb8 (Update all files)

@@ -1,0 +1,89 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Daftar Siswa{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Manajemen Data Siswa</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'accounts:student_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Tambah Siswa
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Username</th>
+                                <th>Nama Lengkap</th>
+                                <th>NIK</th>
+                                <th>Email</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.username }}</td>
+                                <td>{{ student.userprofile.nama_lengkap|default:"-" }}</td>
+                                <td>{{ student.userprofile.nik|default:"-" }}</td>
+                                <td>{{ student.email }}</td>
+                                <td>
+                                    <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('{{ student.pk }}', '{{ student.username }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Belum ada data murid.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="deleteForm" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus data siswa? <strong id="studentName"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(pk, name) {
+    document.getElementById('studentName').innerText = name;
+    document.getElementById('deleteForm').action = "/accounts/student/delete/" + pk + "/";
+    $('#deleteModal').modal('show');
+}
+</script>
+{% endblock %}

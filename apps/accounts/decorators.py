@@ -1,11 +1,7 @@
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import user_passes_test
 
-def role_required(role):
-    def decorator(view_func):
-        def _wrapped_view(request, *args, **kwargs):
-            if request.user.role != role:
-                raise PermissionDenied
-            return view_func(request, *args, **kwargs)
-        return _wrapped_view
-    return decorator
-
+def admin_only(view_func):
+    return user_passes_test(
+        lambda u: u.is_authenticated and u.role == 'admin',
+        login_url='login' # atau arahkan ke halaman '403 Forbidden'
+    )(view_func)

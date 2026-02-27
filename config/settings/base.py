@@ -27,6 +27,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
 ]
 
 CKEDITOR_5_CONFIGS = {
@@ -88,9 +89,9 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'accounts.User'
 
-LOGIN_URL = "core:login"
-LOGIN_REDIRECT_URL = "core:dashboard"
-LOGOUT_REDIRECT_URL = "core:login"
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']

@@ -1,0 +1,89 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Daftar Guru{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Manajemen Data Guru</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'accounts:teacher_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Tambah Guru
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Username</th>
+                                <th>Nama Lengkap</th>
+                                <th>NIK</th>
+                                <th>Email</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ teacher.username }}</td>
+                                <td>{{ teacher.userprofile.nama_lengkap|default:"-" }}</td>
+                                <td>{{ teacher.userprofile.nik|default:"-" }}</td>
+                                <td>{{ teacher.email }}</td>
+                                <td>
+                                    <a href="{% url 'accounts:teacher_edit' teacher.pk %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('{{ teacher.pk }}', '{{ teacher.username }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Belum ada data guru.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="deleteForm" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus guru <strong id="teacherName"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(pk, name) {
+    document.getElementById('teacherName').innerText = name;
+    document.getElementById('deleteForm').action = "/accounts/teachers/delete/" + pk + "/";
+    $('#deleteModal').modal('show');
+}
+</script>
+{% endblock %}

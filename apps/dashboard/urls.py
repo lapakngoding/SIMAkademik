@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import TeacherDashboardView, DashboardView
+from .views import DashboardView
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
-    path('teacher/', TeacherDashboardView.as_view(), name='teacher_dashboard'),
+    #path('teacher/', TeacherDashboardView.as_view(), name='teacher_dashboard'),
 ]
