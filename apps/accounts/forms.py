@@ -1,110 +1,54 @@
+# apps/accounts/forms.py
 from django import forms
-from django.contrib.auth.models import User
-from django.forms import ModelForm
-from .models import User, UserProfile
+from .models import User, UserProfile, TeacherProfile, StudentProfile # Sesuaikan dengan model baru Anda
 
+# Form untuk user auth (Username, Email, dsb)
 class UserForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Masukkan password'}),
+        required=False,
+        help_text="Gunakan password yang kuat."
+    )
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-        }
+        fields = ['username', 'email', 'password', 'first_name', 'last_name']
+        widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
 
-
-class ProfileForm(forms.ModelForm):
+# Form untuk data yang ADA di SEMUA orang
+class BaseProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = [
-            # ======================
-            # Identitas Pribadi
-            # ======================
-            'nama_lengkap',
-            'nik',
-            'jenis_kelamin',
-            'tempat_lahir',
-            'tanggal_lahir',
-            'nama_ibu_kandung',
+        fields = ['nama_lengkap', 'tempat_lahir', 'nama_ibu_kandung', 'no_hp','nik', 'jenis_kelamin', 'tanggal_lahir', 'alamat_rumah','no_hp','email_pribadi']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 1. Semua field otomatis dapat class form-control
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+        
+        # 2. Spesifikasikan field yang butuh widget khusus
+        self.fields['jenis_kelamin'].widget.attrs.update(
+            attrs={'class': 'form-control'}
+        )
+        self.fields['tanggal_lahir'].widget = forms.DateInput(
+            attrs={'class': 'form-control', 'type': 'date'}
+        )
+        self.fields['alamat_rumah'].widget = forms.Textarea(
+            attrs={'class': 'form-control', 'rows': 3}
+        )
+        
 
-            # ======================
-            # Kepegawaian
-            # ======================
-            'nip_nuptk',
-            'jabatan',
-            'pangkat_golongan',
+# Form khusus GURU
+class TeacherProfileForm(forms.ModelForm):
+    class Meta:
+        model = TeacherProfile # Model baru yang kita rencanakan
+        fields = ['nip_nuptk', 'jabatan', 'pangkat_golongan']
+        widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
 
-            # ======================
-            # Unit Kerja
-            # ======================
-            'nama_sekolah',
-            'npsn',
-            'alamat_sekolah',
-            'email_unit_kerja',
-
-            # ======================
-            # Kontak Pribadi
-            # ======================
-            'alamat_rumah',
-            'no_hp',
-            'email_pribadi',
-
-            # ======================
-            # Pendidikan
-            # ======================
-            'pendidikan_terakhir',
-            'jurusan',
-            'gelar',
-
-            # ======================
-            # Dokumen
-            # ======================
-            'scan_ktp',
-            'scan_kk',
-            'scan_sk',
-        ]
-
-        widgets = {
-            # Identitas Pribadi
-            'nama_lengkap': forms.TextInput(attrs={'class': 'form-control'}),
-            'nik': forms.TextInput(attrs={'class': 'form-control'}),
-            'jenis_kelamin': forms.Select(attrs={'class': 'form-control'}),
-            'tempat_lahir': forms.TextInput(attrs={'class': 'form-control'}),
-            'tanggal_lahir': forms.DateInput(
-                attrs={'class': 'form-control', 'type': 'date'}
-            ),
-            'nama_ibu_kandung': forms.TextInput(attrs={'class': 'form-control'}),
-
-            # Kepegawaian
-            'nip_nuptk': forms.TextInput(attrs={'class': 'form-control'}),
-            'jabatan': forms.TextInput(attrs={'class': 'form-control'}),
-            'pangkat_golongan': forms.TextInput(attrs={'class': 'form-control'}),
-
-            # Unit Kerja
-            'nama_sekolah': forms.TextInput(attrs={'class': 'form-control'}),
-            'npsn': forms.TextInput(attrs={'class': 'form-control'}),
-            'alamat_sekolah': forms.Textarea(
-                attrs={'class': 'form-control', 'rows': 3}
-            ),
-            'email_unit_kerja': forms.EmailInput(attrs={'class': 'form-control'}),
-
-            # Kontak Pribadi
-            'alamat_rumah': forms.Textarea(
-                attrs={'class': 'form-control', 'rows': 3}
-            ),
-            'no_hp': forms.TextInput(attrs={'class': 'form-control'}),
-            'email_pribadi': forms.EmailInput(attrs={'class': 'form-control'}),
-
-            # Pendidikan
-            'pendidikan_terakhir': forms.TextInput(attrs={'class': 'form-control'}),
-            'jurusan': forms.TextInput(attrs={'class': 'form-control'}),
-            'gelar': forms.TextInput(attrs={'class': 'form-control'}),
-
-            # Dokumen
-            'scan_ktp': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'scan_kk': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'scan_sk': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
-
+# Form khusus SISWA
+class StudentProfileForm(forms.ModelForm):
+    class Meta:
+        model = StudentProfile # Model baru yang kita rencanakan
+        fields = ['nisn', 'kelas','nama_ibu_kandung']
+        widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
