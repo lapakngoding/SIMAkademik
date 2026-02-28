@@ -86,8 +86,4 @@ class StudentProfile(models.Model):
     nisn = models.CharField(max_length=20, unique=True)
     kelas = models.CharField(max_length=20)
     nama_ibu_kandung = models.CharField(max_length=150, blank=True)
-    # Atribut khusus siswa lainnya...
-<<<<<<< HEAD
-=======
-
->>>>>>> 7cbebb8 (Update all files)
+    kelas = models.ForeignKey('academics.Classroom', on_delete=models.SET_NULL, null=True, blank=True)
