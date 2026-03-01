@@ -50,7 +50,7 @@ SIMAkademik/
 <h2>🛣 Roadmap</h2>
 <ul>
   <li>☐ Dashboard Statistik</li>
-  <li>☐ Export Nilai ke PDF</li>
+  <li>☐ Export Nilai to PDF</li>
   <li>☐ REST API (DRF)</li>
   <li>☐ Multi-school (SaaS)</li>
   <li>☐ Deployment Guide (VPS / Docker)</li>
