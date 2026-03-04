@@ -1,0 +1,38 @@
+/* Membuat input Title dan CKEditor memenuhi lebar layar */
+.aligned .vTextField, 
+.aligned .vLargeTextField, 
+.ck-editor__editable {
+    width: 100% !important;
+    min-height: 300px; /* Biar editornya luas */
+}
+
+/* Memperbaiki tampilan Date & Time agar tidak tumpang tindih */
+.datetime input {
+    display: inline-block;
+    width: auto !important;
+    padding: 6px 12px;
+    margin-right: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.datetimeshortcuts {
+    font-size: 12px;
+    color: #007bff;
+}
+
+/* Pastikan container CKEditor tidak tersembunyi */
+.ck-editor {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* Jika textarea asli disembunyikan oleh CKEditor, pastikan editornya menggantikannya */
+.django_ckeditor_5 {
+    display: none; /* Textarea asli memang harus sembunyi */
+}
+
+.ck-editor__editable_inline {
+    min-height: 400px !important; /* Beri tinggi agar terlihat */
+    color: black !important; /* Terkadang AdminLTE membuat teks jadi putih (tidak terbaca) */
+}

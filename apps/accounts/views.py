@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from .utils import get_user_role
-from .forms import UserForm, BaseProfileForm, TeacherProfileForm, StudentProfileForm
-from .models import User, UserProfile, TeacherProfile, StudentProfile
+from .forms import UserForm, BaseProfileForm, TeacherProfileForm, StudentProfileForm, PostForm
+from .models import User, UserProfile, TeacherProfile, StudentProfile, Post, Page
 from .decorators import admin_only
 
 class RoleBasedLoginView(LoginView):
@@ -120,11 +120,11 @@ def teacher_create(request):
     }
     return render(request, 'accounts/teacher_form.html', context)
 
-# EDIT GURU
 @admin_only
 def teacher_edit(request, pk):
     teacher = get_object_or_404(User, pk=pk)
     profile = teacher.userprofile
+    # Ambil detail, jika tidak ada (None), form akan menganggap ini data baru
     detail = TeacherProfile.objects.filter(user_profile=profile).first()
 
     if request.method == 'POST':
@@ -133,29 +133,28 @@ def teacher_edit(request, pk):
         t_form = TeacherProfileForm(request.POST, instance=detail)
         
         if u_form.is_valid() and p_form.is_valid() and t_form.is_valid():
+            # 1. Simpan User
             user = u_form.save(commit=False)
-            
-            # CEK: Apakah admin mengisi kotak password?
             new_password = u_form.cleaned_data.get('password')
             if new_password:
-                # Jika diisi, enkripsi password baru
                 user.set_password(new_password)
-            else:
-                # Jika kosong, jangan ubah password! 
-                # Kita ambil password yang sudah ada di database (yang masih terenkripsi)
-                user.password = User.objects.get(pk=teacher.pk).password
-            
             user.save()
+            
+            # 2. Simpan Profile Utama
             p_form.save()
-            t_form.save()
+            
+            # 3. Simpan Teacher Detail (LOGIKA PENYELAMAT)
+            teacher_detail = t_form.save(commit=False)
+            if not detail:
+                # Jika data TeacherProfile belum ada di DB, hubungkan ke profile sekarang
+                teacher_detail.user_profile = profile
+            teacher_detail.save()
             
             messages.success(request, 'Data guru berhasil diupdate!')
             return redirect('accounts:teacher_list')
     else:
-        # Saat GET, kita kosongkan field password di form agar tidak menampilkan hash-nya
         u_form = UserForm(instance=teacher)
-        u_form.fields['password'].initial = "" 
-        
+        u_form.fields['password'].initial = ""
         p_form = BaseProfileForm(instance=profile)
         t_form = TeacherProfileForm(instance=detail)
 
@@ -259,3 +258,20 @@ def student_edit(request, pk):
     return render(request, 'accounts/student_form.html', {
         'u_form': u_form, 'p_form': p_form, 's_form': s_form, 'title': 'Edit Siswa'
     })
+
+@login_required
+def post_list(request):
+    posts = Post.objects.all().order_by('-published_at')
+    return render(request, 'dashboard/website/post_list.html', {'posts': posts})
+
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:post_list')
+    else:
+        form = PostForm()
+    
+    return render(request, 'dashboard/website/post_form.html', {'form': form})

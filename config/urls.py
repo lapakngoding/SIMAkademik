@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from apps.accounts.views import RoleBasedLoginView
+from django.conf import settings # Tambahkan ini
+from django.conf.urls.static import static
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,7 +41,15 @@ urlpatterns = [
     path('attendance/', include('apps.attendance.urls')),
     path('grades/', include('apps.grades.urls')),
     path('announcements/', include('apps.announcements.urls')),
+    path('website/', include('apps.website.urls')),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
 
     # PUBLIC WEBSITE
     path('', include('apps.website.urls')),
 ]
+
+# ... (urlpatterns kamu) ...
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

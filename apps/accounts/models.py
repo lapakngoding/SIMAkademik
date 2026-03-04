@@ -86,8 +86,33 @@ class StudentProfile(models.Model):
     nisn = models.CharField(max_length=20, unique=True)
     kelas = models.CharField(max_length=20)
     nama_ibu_kandung = models.CharField(max_length=150, blank=True)
-    # Atribut khusus siswa lainnya...
-<<<<<<< HEAD
-=======
+    kelas = models.ForeignKey('academics.Classroom', on_delete=models.SET_NULL, null=True, blank=True)
 
->>>>>>> 7cbebb8 (Update all files)
+
+from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
+
+class Page(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    # Ganti TextField jadi CKEditor5Field
+    content = CKEditor5Field('Content', config_name='default') 
+    is_published = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    # Ganti TextField jadi CKEditor5Field
+    content = CKEditor5Field('Content', config_name='default')
+    published_at = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+

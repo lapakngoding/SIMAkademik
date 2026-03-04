@@ -20,19 +20,39 @@ THEME = env('THEME', default='default')
 DJANGO_APPS = [
     "adminlte3",
     "adminlte3_theme",
-    "django_ckeditor_5",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django_ckeditor_5",
     'widget_tweaks',
 ]
 
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
 CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'imageUpload'],
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+    },
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|', 'bulletedList', 'numberedList',
+            '|', 'blockQuote',
+        ],
+        'toolbar': [
+            'heading', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+            '|', 'bulletedList', 'numberedList', 'todoList',
+            '|', 'blockQuote', 'insertImage', 'insertTable', 'mediaEmbed',
+            '|', 'fontSize', 'fontColor', 'fontBackgroundColor',
+            '|', 'outdent', 'indent', 'sourceEditing'
+        ],
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight'],
+            'styles': ['full', 'alignLeft', 'alignCenter', 'alignRight']
+        }
     }
 }
 
@@ -53,6 +73,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,7 +88,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / f'templates/themes/{THEME}',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -95,6 +115,8 @@ LOGOUT_REDIRECT_URL = "login"
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

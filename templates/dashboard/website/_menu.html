@@ -23,29 +23,10 @@
         </a>
     </li>
     <li class="nav-item">
-      <a href="{% url 'accounts:student_list' %}" class="nav-link {% if 'student' in request.path %}text-white font-weight-bold{% endif %}">
+      <a href="#" class="nav-link {% if 'student' in request.path %}text-white font-weight-bold{% endif %}">
         <i class="far fa-circle nav-icon"></i>
         <p>Siswa</p>
       </a>
-    </li>
-  </ul>
-</li>
-<li class="nav-item {% if 'teacher' in request.path or 'student' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link {% if 'teacher' in request.path or 'student' in request.path %}active{% endif %}">
-    <i class="nav-icon fas fa-users"></i>
-    <p>
-      Manajemen Website
-      <i class="right fas fa-angle-left"></i>
-    </p>
-  </a>
-
-  <ul class="nav nav-treeview">
-    <li class="nav-item">
-      <a href="{% url 'accounts:post_list' %}" 
-           class="nav-link {% if 'post' in request.path %}text-white font-weight-bold{% else %}text-muted{% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Daftar Website</p>
-        </a>
     </li>
   </ul>
 </li>

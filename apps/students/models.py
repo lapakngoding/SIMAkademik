@@ -7,7 +7,8 @@ class Student(models.Model):
     classroom = models.ForeignKey(
         'academics.Classroom',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True
     )
     status = models.CharField(max_length=20, default='active')
 

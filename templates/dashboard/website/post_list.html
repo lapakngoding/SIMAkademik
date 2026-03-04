@@ -1,0 +1,72 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Daftar Berita & Konten{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Manajemen Konten Website</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="{% url 'accounts:post_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Berita
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Daftar Berita/Postingan</h3>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Judul</th>
+                            <th>Slug</th>
+                            <th>Tanggal Publikasi</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ post.title }}</strong></td>
+                            <td><small class="text-muted">{{ post.slug }}</small></td>
+                            <td>{{ post.published_at|date:"d M Y H:i" }}</td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-sm btn-info" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus berita ini?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a href="/berita/{{ post.slug }}/" target="_blank" class="btn btn-sm btn-secondary" title="Lihat di Web">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <img src="{% static 'dist/img/no-data.png' %}" alt="No Data" style="height: 100px; opacity: 0.5;">
+                                <p class="mt-2 text-muted">Belum ada berita yang dibuat.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+    </div>
+</section>
+{% endblock %}
