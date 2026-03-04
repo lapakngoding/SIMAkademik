@@ -116,3 +116,4 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+# TEST PUSH
