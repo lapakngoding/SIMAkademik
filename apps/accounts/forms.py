@@ -1,5 +1,6 @@
 # apps/accounts/forms.py
 from django import forms
+from django.utils import timezone
 # Sesuaikan dengan model baru Anda
 from .models import User, UserProfile, TeacherProfile, StudentProfile, Post
 
@@ -57,17 +58,33 @@ class StudentProfileForm(forms.ModelForm):
 
 from django_ckeditor_5.widgets import CKEditor5Widget
 
+# apps/website/forms.py
+
 class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Tambahkan class Bootstrap agar seragam dengan dashboard guru/siswa
         self.fields['title'].widget.attrs.update({'class': 'form-control'})
-        self.fields['published_at'].widget.attrs.update({'class': 'form-control', 'type': 'datetime-local'})
+        
+        # Pastikan format initial value-nya benar-benar bersih (hanya Tahun-Bulan-HariTJam:Menit)
+        if not self.instance.pk:
+            self.initial['published_at'] = timezone.now().strftime('%Y-%m-%dT%H:%M')
+        else:
+            # Jika sedang EDIT, pastikan data lama diformat ulang agar bisa dibaca input HTML5
+            if self.instance.published_at:
+                self.initial['published_at'] = self.instance.published_at.strftime('%Y-%m-%dT%H:%M')
 
     class Meta:
         model = Post
         fields = ['title', 'content', 'published_at']
         widgets = {
+            'published_at': forms.DateTimeInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'datetime-local',
+                    'step': '60', # Ini kuncinya! '60' artinya kelipatan 60 detik (1 menit).
+                },
+                format='%Y-%m-%dT%H:%M'
+            ),
             "content": CKEditor5Widget(
                 attrs={"class": "django_ckeditor_5"}, 
                 config_name="extends"

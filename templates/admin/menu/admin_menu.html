@@ -30,9 +30,9 @@
     </li>
   </ul>
 </li>
-<li class="nav-item {% if 'teacher' in request.path or 'student' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link {% if 'teacher' in request.path or 'student' in request.path %}active{% endif %}">
-    <i class="nav-icon fas fa-users"></i>
+<li class="nav-item {% if 'website' in request.path or 'website' in request.path %}menu-open{% endif %}">
+  <a href="#" class="nav-link active">
+    <i class="nav-icon fas fa-globe"></i>
     <p>
       Manajemen Website
       <i class="right fas fa-angle-left"></i>
@@ -41,10 +41,9 @@
 
   <ul class="nav nav-treeview">
     <li class="nav-item">
-      <a href="{% url 'accounts:post_list' %}" 
-           class="nav-link {% if 'post' in request.path %}text-white font-weight-bold{% else %}text-muted{% endif %}">
+      <a href="{% url 'accounts:post_list' %}" class="nav-link text-white font-weight-bold">
             <i class="far fa-circle nav-icon"></i>
-            <p>Daftar Website</p>
+            <p>Daftar Konten</p>
         </a>
     </li>
   </ul>
