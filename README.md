@@ -11,7 +11,7 @@
 
 <hr>
 
-<h2>✨ About SIMAkademik</h2>
+<h2>✨ Tentang SIMAkademik</h2>
 <p><strong>SIMAkademik</strong> adalah sistem manajemen akademik berbasis web yang dirancang untuk membantu sekolah dalam mengelola operasional harian secara efisien dan terstruktur. Dirancang dengan <strong>arsitektur modular</strong> agar mudah dikembangkan menjadi sistem skala besar atau SaaS.</p>
 
 <h2>🚀 Features</h2>
@@ -50,7 +50,7 @@ SIMAkademik/
 <h2>🛣 Roadmap</h2>
 <ul>
   <li>☐ Dashboard Statistik</li>
-  <li>☐ Export Nilai ke PDF</li>
+  <li>☐ Export Nilai to PDF</li>
   <li>☐ REST API (DRF)</li>
   <li>☐ Multi-school (SaaS)</li>
   <li>☐ Deployment Guide (VPS / Docker)</li>
