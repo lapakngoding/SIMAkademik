@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from .utils import get_user_role
-from .forms import UserForm, BaseProfileForm, TeacherProfileForm, StudentProfileForm, PostForm
-from .models import User, UserProfile, TeacherProfile, StudentProfile, Post, Page
+from .forms import UserForm, BaseProfileForm, TeacherProfileForm, StudentProfileForm
+from .models import User, UserProfile, TeacherProfile, StudentProfile
 from .decorators import admin_only
 
 class RoleBasedLoginView(LoginView):
@@ -259,19 +259,3 @@ def student_edit(request, pk):
         'u_form': u_form, 'p_form': p_form, 's_form': s_form, 'title': 'Edit Siswa'
     })
 
-@login_required
-def post_list(request):
-    posts = Post.objects.all().order_by('-published_at')
-    return render(request, 'dashboard/website/post_list.html', {'posts': posts})
-
-@login_required
-def post_create(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:post_list')
-    else:
-        form = PostForm()
-    
-    return render(request, 'dashboard/website/post_form.html', {'form': form})

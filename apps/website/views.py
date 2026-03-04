@@ -1,6 +1,8 @@
 # apps/website/views.py
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Page, Post
+from .forms import PostForm
 
 def home(request):
     # Mengambil 3 post terbaru untuk ditampilkan di section blog depan
@@ -18,3 +20,41 @@ def blog_list(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     return render(request, 'website/post_detail.html', {'post': post})
+
+@login_required
+def post_list(request):
+    posts = Post.objects.all().order_by('-published_at')
+    return render(request, 'dashboard/website/post_list.html', {'posts': posts})
+
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('website:post_list')
+    else:
+        form = PostForm()
+    
+    return render(request, 'dashboard/website/post_form.html', {'form': form})
+
+@login_required
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('website:post_list')
+    else:
+        form = PostForm(instance=post)
+    
+    return render(request, 'dashboard/website/post_form.html', {'form': form, 'edit_mode': True})
+
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('website:post_list')
+    return render(request, 'dashboard/website/post_confirm_delete.html', {'post': post})

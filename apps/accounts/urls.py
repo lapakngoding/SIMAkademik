@@ -16,7 +16,5 @@ urlpatterns = [
     path('students/', views.student_list, name='student_list'),
     path('students/add/', views.student_create, name='student_create'),
     path('students/edit/<int:pk>/', views.student_edit, name='student_edit'),
-    path('website/', views.post_list, name='post_list'),
-    path('website/add', views.post_create, name='post_create'),
     #path('students/delete/<int:pk>/', views.student_delete, name='student_delete'),
 ]

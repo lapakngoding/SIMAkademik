@@ -11,7 +11,7 @@
                 <h1 class="m-0 text-dark">Manajemen Konten Website</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{% url 'accounts:post_create' %}" class="btn btn-primary">
+                <a href="{% url 'website:post_create' %}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah Berita
                 </a>
             </div>
@@ -44,10 +44,10 @@
                             <td><small class="text-muted">{{ post.slug }}</small></td>
                             <td>{{ post.published_at|date:"d M Y H:i" }}</td>
                             <td class="text-center">
-                                <a href="#" class="btn btn-sm btn-info" title="Edit">
+                                <a href="{% url 'website:post_edit' post.pk %}" class="btn btn-sm btn-info" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="#" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus berita ini?')">
+                                <a href="{% url 'website:post_delete' post.pk %}" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus berita ini?')">
                                     <i class="fas fa-trash"></i>
                                 </a>
                                 <a href="/berita/{{ post.slug }}/" target="_blank" class="btn btn-sm btn-secondary" title="Lihat di Web">
