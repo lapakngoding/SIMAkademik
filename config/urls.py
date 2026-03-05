@@ -41,7 +41,6 @@ urlpatterns = [
     path('attendance/', include('apps.attendance.urls')),
     path('grades/', include('apps.grades.urls')),
     path('announcements/', include('apps.announcements.urls')),
-    path('website/', include('apps.website.urls')),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
 
     # PUBLIC WEBSITE

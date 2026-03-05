@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Page, Post
-from .forms import PostForm
+from .forms import PostForm, PageForm
 
 def home(request):
     # Mengambil 3 post terbaru untuk ditampilkan di section blog depan
@@ -58,3 +58,39 @@ def post_delete(request, pk):
         post.delete()
         return redirect('website:post_list')
     return render(request, 'dashboard/website/post_confirm_delete.html', {'post': post})
+
+@login_required
+def page_list(request):
+    pages = Page.objects.all().order_by('title')
+    return render(request, 'dashboard/website/page_list.html', {'pages': pages})
+
+@login_required
+def page_create(request):
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('website:page_list')
+    else:
+        form = PageForm()
+    return render(request, 'dashboard/website/page_form.html', {'form': form})
+
+@login_required
+def page_edit(request, pk):
+    page = get_object_or_404(Page, pk=pk)
+    if request.method == 'POST':
+        form = PageForm(request.POST, instance=page)
+        if form.is_valid():
+            form.save()
+            return redirect('website:page_list')
+    else:
+        form = PageForm(instance=page)
+    return render(request, 'dashboard/website/page_form.html', {'form': form, 'edit_mode': True})
+
+@login_required
+def page_delete(request, pk):
+    page = get_object_or_404(Page, pk=pk)
+    if request.method == 'POST':
+        page.delete()
+        return redirect('website:page_list')
+    return render(request, 'dashboard/website/page_confirm_delete.html', {'page': page})

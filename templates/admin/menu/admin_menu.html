@@ -30,8 +30,8 @@
     </li>
   </ul>
 </li>
-<li class="nav-item {% if 'website' in request.path or 'website' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link active">
+<li class="nav-item {% if 'post' in request.path or 'page' in request.path %}menu-open{% endif %}">
+  <a href="#" class="nav-link {% if 'post' in request.path or 'page' in request.path %}active{% endif %}">
     <i class="nav-icon fas fa-globe"></i>
     <p>
       Manajemen Website
@@ -41,9 +41,15 @@
 
   <ul class="nav nav-treeview">
     <li class="nav-item">
-      <a href="{% url 'website:post_list' %}" class="nav-link text-white font-weight-bold">
+      <a href="{% url 'website:post_list' %}" class="nav-link {% if 'post' in request.path %} text-white font-weight-bold {% endif %}">
             <i class="far fa-circle nav-icon"></i>
-            <p>Daftar Konten</p>
+            <p>List Post</p>
+        </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'website:page_list' %}" class="nav-link {% if 'page' in request.path %} text-white font-weight-bold {% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>List Page</p>
         </a>
     </li>
   </ul>

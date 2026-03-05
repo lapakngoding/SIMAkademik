@@ -33,3 +33,21 @@ class PostForm(forms.ModelForm):
                 config_name="extends"
             )
         }
+
+class PageForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'form-control'})
+        # Page biasanya tidak butuh published_at karena sifatnya statis, 
+        # tapi pastikan is_published bisa dicentang dengan rapi
+        self.fields['is_published'].widget.attrs.update({'class': 'form-check-input'})
+
+    class Meta:
+        model = Page
+        fields = ['title', 'content', 'is_published']
+        widgets = {
+            "content": CKEditor5Widget(
+                attrs={"class": "django_ckeditor_5"}, 
+                config_name="extends"
+            )
+        }

@@ -1,0 +1,76 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<style>
+    /* Memastikan input tanggal memiliki tinggi yang pas dan bisa diklik */
+    input[type="datetime-local"] {
+        min-height: 45px;
+        cursor: pointer;
+    }
+    
+    /* Memperbaiki tampilan CKEditor agar tidak terlalu sempit */
+    .ck-editor__editable_inline {
+        min-height: 300px;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0">Kelola Halaman</h1>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Tambah Halaman</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {{ form.media }}
+
+                    <div class="form-group">
+                        <label>Judul Halaman</label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Isi Halaman</label>
+                        {{ form.content }}
+                    </div>
+
+                    <div class="form-check mb-3">
+                        {{ form.is_published }}
+                        <label class="form-check-label" for="{{ form.is_published.id_for_label }}">
+                            Publikasikan Halaman Ini (Dapat dilihat oleh umum)
+                        </label>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Simpan Konten</button>
+                        <a href="{% url 'website:page_list' %}" class="btn btn-secondary">Batal</a>
+                    </div>
+                </form>
+<script>
+
+    const dateInput = document.querySelector('input[type="datetime-local"]');
+    
+    // Jika input masih kosong, isi dengan waktu sekarang
+    if (dateInput && !dateInput.value) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        dateInput.value = now.toISOString().slice(0, 16);
+    }
+
+    // Trigger picker saat diklik
+    dateInput.addEventListener('click', function() {
+        try { this.showPicker(); } catch (e) {}
+    });
+</script>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
