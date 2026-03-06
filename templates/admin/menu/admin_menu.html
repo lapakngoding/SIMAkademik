@@ -43,13 +43,19 @@
     <li class="nav-item">
       <a href="{% url 'website:post_list' %}" class="nav-link {% if 'post' in request.path %} text-white font-weight-bold {% endif %}">
             <i class="far fa-circle nav-icon"></i>
-            <p>List Post</p>
+            <p>Post Website</p>
         </a>
     </li>
     <li class="nav-item">
       <a href="{% url 'website:page_list' %}" class="nav-link {% if 'page' in request.path %} text-white font-weight-bold {% endif %}">
             <i class="far fa-circle nav-icon"></i>
-            <p>List Page</p>
+            <p>Halaman Website</p>
+        </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'website:banner_list' %}" class="nav-link {% if 'banner' in request.path %} text-white font-weight-bold {% endif %}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Banner Website</p>
         </a>
     </li>
   </ul>

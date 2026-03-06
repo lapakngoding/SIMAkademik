@@ -2,31 +2,49 @@
 {% load static %}
 
 {% block content %}
-<header class="bg-dark py-5">
-    <div class="container px-5">
-        <div class="row gx-5 align-items-center justify-content-center">
-            <div class="col-lg-8 col-xl-7 col-xxl-6">
-                <div class="my-5 text-center text-xl-start">
-                    <h1 class="display-5 fw-bolder text-white mb-2">Selamat Datang di SIM Sekolah</h1>
-                    <p class="lead fw-normal text-white-50 mb-4">Pusat informasi dan manajemen akademik terpadu untuk masa depan gemilang.</p>
+<header>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {% for banner in banners %}
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="true"></button>
+            {% endfor %}
+        </div>
+        <div class="carousel-inner">
+            {% for banner in banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 70vh; min-height: 400px; background: url('{{ banner.image.url }}') center center / cover no-repeat;">
+                <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.5); border-radius: 15px; padding: 20px;">
+                    <h1 class="display-4 fw-bolder text-white">{{ banner.title }}</h1>
+                    <p class="lead fw-normal text-white-50">{{ banner.description }}</p>
+                    {% if banner.url %}
+                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{{ banner.url }}">Selengkapnya</a>
+                    {% endif %}
                 </div>
             </div>
-            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
-                <img class="img-fluid rounded-3 my-5" src="{% static 'website/assets/hero.jpg' %}" alt="..." />
+            {% empty %}
+            <div class="carousel-item active bg-dark" style="height: 70vh;">
+                <div class="carousel-caption d-md-block py-5">
+                    <h1 class="display-4 fw-bolder text-white">Selamat Datang di SIM Sekolah</h1>
+                    <p class="lead text-white-50">Silakan tambahkan banner di dashboard.</p>
+                </div>
             </div>
+            {% endfor %}
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </header>
 
 <section class="py-5">
     <div class="container px-5 my-5">
-        <div class="row gx-5 justify-content-center">
-            <div class="col-lg-8 col-xl-6">
-                <div class="text-center">
-                    <h2 class="fw-bolder">Berita Terbaru</h2>
-                    <hr>
-                </div>
-            </div>
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder">Berita Terbaru</h2>
+            <hr class="w-25 mx-auto">
         </div>
         <div class="row gx-5">
             {% for post in posts %}
@@ -37,7 +55,7 @@
                         <a class="text-decoration-none link-dark stretched-link" href="{% url 'website:post_detail' post.slug %}">
                             <h5 class="card-title mb-3">{{ post.title }}</h5>
                         </a>
-                        <p class="card-text mb-0">{{ post.content|truncatewords:20|safe }}</p>
+                        <p class="card-text mb-0 text-muted small">{{ post.content|striptags|truncatewords:20 }}</p>
                     </div>
                     <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
                         <div class="small text-muted">{{ post.published_at|date:"d M Y" }}</div>
@@ -48,4 +66,16 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myCarousel = document.querySelector('#carouselExampleIndicators')
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 3000, // Kecepatan pindah (3 detik)
+            ride: 'carousel',
+            wrap: true
+        })
+    })
+</script>
 {% endblock %}
+

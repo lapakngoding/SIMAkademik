@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Post, Page
+from .models import Post, Page, Banner
 from django_ckeditor_5.widgets import CKEditor5Widget
 
 class PostForm(forms.ModelForm):
@@ -50,4 +50,27 @@ class PageForm(forms.ModelForm):
                 attrs={"class": "django_ckeditor_5"}, 
                 config_name="extends"
             )
+        }
+        
+class BannerForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Memberikan class bootstrap untuk semua field
+        for field_name, field in self.fields.items():
+            if field_name != 'is_active':  # Checkbox punya class sendiri di Bootstrap
+                field.widget.attrs.update({'class': 'form-control'})
+            else:
+                field.widget.attrs.update({'class': 'form-check-input'})
+
+    class Meta:
+        model = Banner
+        fields = ['title', 'description', 'image', 'url', 'is_active', 'order']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Masukkan deskripsi singkat banner...'}),
+            'url': forms.TextInput(attrs={'placeholder': 'Contoh: https://google.com atau /blog/'}),
+            'order': forms.NumberInput(attrs={'min': 0}),
+        }
+        help_texts = {
+            'image': 'Disarankan ukuran 1920x600 px untuk hasil maksimal.',
+            'url': 'Gunakan URL lengkap (dengan https://) untuk link luar, atau path (seperti /blog/) untuk link internal.',
         }

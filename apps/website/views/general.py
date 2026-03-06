@@ -1,13 +1,20 @@
 # apps/website/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Page, Post
-from .forms import PostForm, PageForm
+from ..models import Page, Post, Banner
+from ..forms import PostForm, PageForm
 
 def home(request):
     # Mengambil 3 post terbaru untuk ditampilkan di section blog depan
+    banners = Banner.objects.filter(is_active=True).order_by('order')
     recent_posts = Post.objects.filter(published_at__isnull=False).order_by('-published_at')[:3]
-    return render(request, 'website/index.html', {'posts': recent_posts})
+    
+    context = {
+        'banners': banners,
+        'posts': recent_posts,
+    }
+    
+    return render(request, 'website/index.html', context)
 
 def page_detail(request, slug):
     page = get_object_or_404(Page, slug=slug, is_published=True)
