@@ -1,19 +1,53 @@
 {% extends 'website/base.html' %}
-
-{% block title %}{{ page.title }} - SIM Sekolah{% endblock %}
+{% load static %}
 
 {% block content %}
-<section class="py-5">
-    <div class="container px-5 my-5">
-        <div class="row gx-5 justify-content-center">
-            <div class="col-lg-10">
-                <h1 class="fw-bolder mb-3">{{ page.title }}</h1>
-                <hr>
-                <div class="fs-5 mb-4">
+<nav class="py-3 bg-light border-bottom" aria-label="breadcrumb">
+    <div class="container px-5">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'website:home' %}" class="text-decoration-none">Beranda</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+        </ol>
+    </div>
+</nav>
+
+<section class="py-4">
+    <div class="container px-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="mb-4">
+                    <h1 class="fw-bold display-6 mb-2">{{ page.title }}</h1>
+                    <div class="text-muted small">
+                        <i class="bi bi-clock"></i> Terakhir diperbarui: {{ page.created_at|date:"d F Y" }}
+                    </div>
+                    <hr class="mt-3 mb-4">
+                </div>
+
+                <div class="page-content text-dark fs-5">
                     {{ page.content|safe }}
+                </div>
+
+                <div class="mt-5 pt-4 border-top">
+                    <a href="{% url 'website:home' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Kembali ke Beranda
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* CSS Tambahan agar konten CKEditor tetap rapi */
+    .page-content p {
+        margin-bottom: 1.2rem;
+        line-height: 1.6;
+    }
+    .page-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+</style>
 {% endblock %}

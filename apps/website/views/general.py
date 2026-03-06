@@ -17,16 +17,23 @@ def home(request):
     return render(request, 'website/index.html', context)
 
 def page_detail(request, slug):
+    # Mencari halaman berdasarkan slug
     page = get_object_or_404(Page, slug=slug, is_published=True)
     return render(request, 'website/page_detail.html', {'page': page})
-
+    
 def blog_list(request):
     posts = Post.objects.all().order_by('-published_at')
     return render(request, 'website/blog_list.html', {'posts': posts})
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    return render(request, 'website/post_detail.html', {'post': post})
+    post = get_object_or_404(Post, slug=slug, published_at__isnull=False)
+    # Ambil 5 berita terbaru lainnya untuk sidebar
+    sidebar_posts = Post.objects.filter(published_at__isnull=False).exclude(id=post.id).order_by('-published_at')[:5]
+    
+    return render(request, 'website/post_detail.html', {
+        'post': post,
+        'sidebar_posts': sidebar_posts
+    })
 
 @login_required
 def post_list(request):
