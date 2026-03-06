@@ -4,26 +4,15 @@
 {% block title %}List Banner{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Manajemen Banner Website</h1>
-            </div>
-            <div class="col-sm-6 text-right">
-                <a href="{% url 'website:banner_create' %}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Banner
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<section class="content">
     <div class="container-fluid">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <h3 class="card-title">Banner Website</h3>
+                <h3 class="card-title">Manajemen Banner Website</h3>
+                <div class="card-tools">
+                    <a href="{% url 'website:banner_create' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Tambah Banner
+                    </a>
+                </div>
             </div>
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
@@ -51,6 +40,9 @@
                             </td>
                             <td>
                                 <a href="{% url 'website:banner_edit' banner.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'website:banner_delete' banner.pk %}" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus halaman ini?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
                             </td>
                         </tr>
                         {% empty %}
@@ -66,5 +58,4 @@
             </div>
             </div>
     </div>
-</section>
 {% endblock %}
