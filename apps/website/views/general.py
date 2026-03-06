@@ -21,8 +21,16 @@ def page_detail(request, slug):
     page = get_object_or_404(Page, slug=slug, is_published=True)
     return render(request, 'website/page_detail.html', {'page': page})
     
+from django.core.paginator import Paginator # Tambahkan import ini
+
 def blog_list(request):
-    posts = Post.objects.all().order_by('-published_at')
+    posts_list = Post.objects.filter(published_at__isnull=False).order_by('-published_at')
+    
+    # Tampilkan 6 berita per halaman
+    paginator = Paginator(posts_list, 6) 
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+    
     return render(request, 'website/blog_list.html', {'posts': posts})
 
 def post_detail(request, slug):

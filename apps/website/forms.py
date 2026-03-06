@@ -18,7 +18,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'published_at']
+        fields = ['title', 'content', 'image','published_at']
         widgets = {
             'published_at': forms.DateTimeInput(
                 attrs={
