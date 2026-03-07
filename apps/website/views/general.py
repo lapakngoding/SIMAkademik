@@ -23,7 +23,14 @@ def home(request):
 def page_detail(request, slug):
     # Mencari halaman berdasarkan slug
     page = get_object_or_404(Page, slug=slug, is_published=True)
-    return render(request, 'website/page_detail.html', {'page': page})
+    school_info = SchoolProfile.objects.first()
+
+    context = {
+        'page': page,
+        'school': school_info,
+    }
+
+    return render(request, 'website/page_detail.html', context)
     
 from django.core.paginator import Paginator # Tambahkan import ini
 
@@ -34,17 +41,25 @@ def blog_list(request):
     paginator = Paginator(posts_list, 6) 
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)
+    school_info = SchoolProfile.objects.first()
+
+    context = {
+        'posts': posts,
+        'school': school_info,
+    }
     
-    return render(request, 'website/blog_list.html', {'posts': posts})
+    return render(request, 'website/blog_list.html', context)
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, published_at__isnull=False)
     # Ambil 5 berita terbaru lainnya untuk sidebar
     sidebar_posts = Post.objects.filter(published_at__isnull=False).exclude(id=post.id).order_by('-published_at')[:5]
+    school_info = SchoolProfile.objects.first()
     
     return render(request, 'website/post_detail.html', {
         'post': post,
-        'sidebar_posts': sidebar_posts
+        'sidebar_posts': sidebar_posts,
+        'school': school_info,
     })
 
 @login_required
