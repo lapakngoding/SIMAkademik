@@ -1,32 +1,55 @@
-<div class="container px-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center mb-5">
-                <h2 class="fw-bolder">Lokasi Sekolah Kami</h2>
-                <p class="lead mb-0">RA. Al-Marzuqiyah - Jl. Suci No.112, Ciracas, Jakarta Timur.</p>
-            </div>
-        </div>
-
-        <div class="card shadow border-0 overflow-hidden">
-            <div class="card-body p-0">
-                <iframe 
-                    width="100%" 
-                    height="450" 
-                    style="border:0;" 
-                    loading="lazy" 
-                    allowfullscreen 
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.736605054178!2d106.86513037482976!3d-6.315358993674003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed77abcb729f%3A0x60bfd86bdd2de6f0!2sRA.%20Al-%20Marzuqiyah!5e0!3m2!1sid!2sid!4v1709745000000!5m2!1sid!2sid">
-                </iframe>
-            </div>
-            <div class="p-3 bg-white text-center border-top">
-                <div class="mb-2">
-                    <small class="text-muted"><i class="bi bi-geo-alt-fill"></i> Jl. Suci No.112, RT.4/RW.4, Susukan, Kec. Ciracas, Kota Jakarta Timur</small>
+<div class="container py-5">
+    <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+        <div class="row g-0">
+            <div class="col-lg-4 bg-primary bg-gradient text-white p-5 d-flex flex-column justify-content-center">
+                <h3 class="fw-bolder mb-4">Hubungi Kami</h3>
+                
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0"><i class="bi bi-geo-alt-fill fs-4"></i></div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 fw-bold">Alamat Sekolah</h6>
+                        <p class="small mb-0 opacity-75">{{ school.address }}</p>
+                    </div>
                 </div>
-                <a href="https://maps.google.com/?cid=6971408017326261904" 
-                   target="_blank" 
-                   class="btn btn-primary shadow-sm">
-                   <i class="bi bi-cursor-fill"></i> Petunjuk Arah (Google Maps)
-                </a>
+
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0"><i class="bi bi-telephone-fill fs-4"></i></div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 fw-bold">Telepon / WA</h6>
+                        <p class="small mb-0 opacity-75">{{ school.phone|default:"-" }}</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0"><i class="bi bi-envelope-fill fs-4"></i></div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 fw-bold">Email Resmi</h6>
+                        <p class="small mb-0 opacity-75">{{ school.email|default:"-" }}</p>
+                    </div>
+                </div>
+
+                <hr class="opacity-25">
+                
+                <div class="mt-auto">
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ school.address|urlencode }}" 
+                       target="_blank" 
+                       class="btn btn-light btn-sm rounded-pill px-4 fw-bold shadow-sm">
+                        <i class="bi bi-cursor-fill me-2"></i>Petunjuk Arah
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-8 p-0">
+                <div class="position-relative h-100" style="min-height: 450px;">
+                    <iframe 
+                        class="position-absolute top-0 start-0 w-100 h-100"
+                        style="border:0; filter: grayscale(20%) contrast(1.2);" 
+                        src="{{ school.google_maps_url }}" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>
+</div>

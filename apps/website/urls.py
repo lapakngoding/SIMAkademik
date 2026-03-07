@@ -1,12 +1,14 @@
 from django.urls import path
 #from . import views
-from .views import general, banner
+from .views import general, banner, dashboard
 
 app_name = 'website'
 
 urlpatterns = [
     # Halaman Utama
     path('', general.home, name='home'),
+    # Profil Sekolah
+    path('dashboard/ProfileSekolah/', dashboard.edit_profile, name='edit_profile_sekolah'),
     # Halaman Blog/Berita
     path('blog/', general.blog_list, name='blog_list'),
     path('post/<slug:slug>/', general.post_detail, name='post_detail'),

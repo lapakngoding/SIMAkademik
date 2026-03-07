@@ -1,7 +1,35 @@
 from django import forms
 from django.utils import timezone
-from .models import Post, Page, Banner
+from .models import Post, Page, Banner, SchoolProfile
 from django_ckeditor_5.widgets import CKEditor5Widget
+
+class SchoolProfileForm(forms.ModelForm):
+    class Meta:
+        model = SchoolProfile
+        fields = ['name', 'address', 'google_maps_url', 'phone', 'email']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control form-control-lg', 
+                'placeholder': 'Contoh: RA. Al-Marzuqiyah'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': '0812-xxxx-xxxx'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'kontak@sekolah.sch.id'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3, 
+                'placeholder': 'Alamat lengkap sekolah...'
+            }),
+            'google_maps_url': forms.TextInput(attrs={
+                'class': 'form-control text-primary', 
+                'placeholder': 'Paste link src iframe di sini...'
+            }),
+        }
 
 class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

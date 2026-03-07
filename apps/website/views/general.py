@@ -2,17 +2,19 @@
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from ..models import Page, Post, Banner
+from ..models import Page, Post, Banner, SchoolProfile
 from ..forms import PostForm, PageForm
 
 def home(request):
     # Mengambil 3 post terbaru untuk ditampilkan di section blog depan
     banners = Banner.objects.filter(is_active=True).order_by('order')
     recent_posts = Post.objects.filter(published_at__isnull=False).order_by('-published_at')[:3]
+    school_info = SchoolProfile.objects.first()
     
     context = {
         'banners': banners,
         'posts': recent_posts,
+        'school': school_info,
     }
     
     return render(request, "base.html", context)

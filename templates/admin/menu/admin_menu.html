@@ -17,23 +17,25 @@
   <ul class="nav nav-treeview">
     <li class="nav-item">
       <a href="{% url 'accounts:teacher_list' %}" 
-           class="nav-link {% if 'teacher' in request.path %}text-white font-weight-bold{% else %}text-muted{% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Guru</p>
+         class="nav-link {% if 'teacher' in request.path %}active{% endif %}">
+            <i class="fas fa-chalkboard-teacher nav-icon"></i>
+            <p {% if 'teacher' in request.path %}class="font-weight-bold"{% endif %}>Guru</p>
         </a>
     </li>
+
     <li class="nav-item">
-      <a href="{% url 'accounts:student_list' %}" class="nav-link {% if 'student' in request.path %}text-white font-weight-bold{% endif %}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>Siswa</p>
+      <a href="{% url 'accounts:student_list' %}" 
+         class="nav-link {% if 'student' in request.path %}active{% endif %}">
+            <i class="fas fa-user-graduate nav-icon"></i>
+            <p {% if 'student' in request.path %}class="font-weight-bold"{% endif %}>Siswa</p>
       </a>
     </li>
-  </ul>
+</ul>
 </li>
-<li class="nav-item {% if 'post' in request.path or 'page' in request.path or 'banner' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link {% if 'post' in request.path or 'page' in request.path %}active{% endif %}">
-    <i class="nav-icon fas fa-globe"></i>
-    <p>
+<li class="nav-item {% if 'post' in request.path or 'page' in request.path or 'banners' in request.path or 'ProfileSekolah' in request.path %}menu-open{% endif %}">
+  
+  <a href="#" class="nav-link {% if 'post' in request.path or 'page' in request.path or 'banners' in request.path or 'ProfileSekolah' in request.path %}active{% endif %}">
+    <i class="nav-icon fas fa-globe-asia"></i> <p>
       Manajemen Website
       <i class="right fas fa-angle-left"></i>
     </p>
@@ -41,22 +43,35 @@
 
   <ul class="nav nav-treeview">
     <li class="nav-item">
-        <a href="{% url 'website:post_list' %}" class="nav-link {% if 'post' in request.path %} text-white font-weight-bold {% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Post Website</p>
+        <a href="{% url 'website:post_list' %}" 
+           class="nav-link {% if 'post' in request.path %}active{% endif %}">
+            <i class="far fa-newspaper nav-icon"></i>
+            <p {% if 'post' in request.path %}class="font-weight-bold"{% endif %}>Post Website</p>
         </a>
     </li>
+
     <li class="nav-item">
-        <a href="{% url 'website:page_list' %}" class="nav-link {% if 'page' in request.path %} text-white font-weight-bold {% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Halaman Website</p>
+        <a href="{% url 'website:page_list' %}" 
+           class="nav-link {% if 'page' in request.path %}active{% endif %}">
+            <i class="fas fa-copy nav-icon"></i>
+            <p {% if 'page' in request.path %}class="font-weight-bold"{% endif %}>Halaman Website</p>
         </a>
     </li>
+
     <li class="nav-item">
-        <a href="{% url 'website:banner_list' %}" class="nav-link {% if 'banner' in request.path %} text-white font-weight-bold {% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Banner Website</p>
+        <a href="{% url 'website:banner_list' %}" 
+           class="nav-link {% if 'banners' in request.path %}active{% endif %}">
+            <i class="fas fa-image nav-icon"></i>
+            <p {% if 'banners' in request.path %}class="font-weight-bold"{% endif %}>Banner Website</p>
         </a>
     </li>
-  </ul>
+
+    <li class="nav-item">
+        <a href="{% url 'website:edit_profile_sekolah' %}" 
+           class="nav-link {% if 'ProfileSekolah' in request.path %}active{% endif %}">
+            <i class="fas fa-school nav-icon"></i>
+            <p {% if 'ProfileSekolah' in request.path %}class="font-weight-bold"{% endif %}>Profil Sekolah</p>
+        </a>
+    </li>
+</ul>
 </li>

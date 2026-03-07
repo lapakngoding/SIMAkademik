@@ -4,6 +4,16 @@ from django.db import models
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
+class SchoolProfile(models.Model):
+    name = models.CharField(max_length=200, default="RA. Al-Marzuqiyah")
+    address = models.TextField()
+    google_maps_url = models.TextField(help_text="Masukkan link iframe src dari Google Maps")
+    phone = models.CharField(max_length=20, blank=True)
+    email = models.EmailField(blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Page(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
