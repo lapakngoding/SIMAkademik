@@ -1,4 +1,5 @@
 # apps/website/views.py
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ..models import Page, Post, Banner
@@ -14,7 +15,8 @@ def home(request):
         'posts': recent_posts,
     }
     
-    return render(request, 'website/index.html', context)
+    return render(request, "base.html", context)
+    #return render(request, 'website/index.html', context)
 
 def page_detail(request, slug):
     # Mencari halaman berdasarkan slug

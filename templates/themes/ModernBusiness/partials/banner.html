@@ -1,0 +1,37 @@
+<header>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {% for banner in banners %}
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="true"></button>
+            {% endfor %}
+        </div>
+        <div class="carousel-inner">
+            {% for banner in banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 70vh; min-height: 400px; background: url('{{ banner.image.url }}') center center / cover no-repeat;">
+                <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.5); border-radius: 15px; padding: 20px;">
+                    <h1 class="display-4 fw-bolder text-white">{{ banner.title }}</h1>
+                    <p class="lead fw-normal text-white-50">{{ banner.description }}</p>
+                    {% if banner.url %}
+                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{{ banner.url }}">Selengkapnya</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="carousel-item active bg-dark" style="height: 70vh;">
+                <div class="carousel-caption d-md-block py-5">
+                    <h1 class="display-4 fw-bolder text-white">Selamat Datang di SIM Sekolah</h1>
+                    <p class="lead text-white-50">Silakan tambahkan banner di dashboard.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</header>

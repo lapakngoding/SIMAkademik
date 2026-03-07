@@ -1,3 +1,10 @@
+from django.conf import settings
+
+def theme(request):
+    return {
+        "THEME": settings.THEME
+    }
+
 def breadcrumbs(request):
 
     breadcrumbs = []

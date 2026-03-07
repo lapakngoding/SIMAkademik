@@ -20,7 +20,6 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to='blog/', blank=True, null=True)
-    # Ganti TextField jadi CKEditor5Field
     content = CKEditor5Field('Content', config_name='default')
     published_at = models.DateTimeField()
 

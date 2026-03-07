@@ -1,0 +1,73 @@
+<style>
+    /* 1. Efek Card Terangkat & Shadow */
+    .card-news {
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        border: none !important;
+        background: #fff;
+    }
+
+    .card-news:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.12) !important;
+    }
+
+    /* 2. Container Gambar untuk Efek Zoom */
+    .img-hover-zoom {
+        height: 200px; 
+        overflow: hidden; /* Penting agar gambar tidak meluber saat zoom */
+        position: relative;
+    }
+
+    .img-hover-zoom img {
+        transition: transform .5s ease;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Saat card di-hover, gambar membesar */
+    .card-news:hover .img-hover-zoom img {
+        transform: scale(1.1);
+    }
+
+    /* 3. Badge Animasi */
+    .badge-news {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+
+    .card-news:hover .badge-news {
+        background-color: #000 !important; /* Warna berubah saat hover */
+    }
+</style>
+    <div class="container px-5 my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder">Info Terbaru</h2>
+            <hr class="w-25 mx-auto">
+        </div>
+        <div class="row gx-5">
+            {% for post in posts %}
+            <div class="col-lg-4 mb-5">
+                <div class="card h-100 shadow border-0">
+                    <div class="card-body p-4">
+                        <div class="img-hover-zoom">
+                            <div class="badge bg-primary bg-gradient rounded-pill badge-news">Berita</div>
+                            <img src="{{ post.get_thumbnail }}" alt="{{ post.title }}" />
+                        </div>
+                        
+                        <a class="text-decoration-none link-dark stretched-link" href="{% url 'website:post_detail' post.slug %}">
+                            <h5 class="card-title mb-3">{{ post.title }}</h5>
+                        </a>
+                        <p class="card-text mb-0 text-muted small">{{ post.content|striptags|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                        <div class="small text-muted">{{ post.published_at|date:"d M Y" }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>

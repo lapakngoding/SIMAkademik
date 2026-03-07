@@ -15,7 +15,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
-THEME = env('THEME', default='default')
+THEME = 'ModernBusiness'
 
 DJANGO_APPS = [
     "adminlte3",
@@ -89,6 +89,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
+            BASE_DIR / 'templates'/'themes'/THEME,
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -98,6 +99,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.core.context_processors.breadcrumbs',
+                'apps.core.context_processors.theme',
             ],
         },
     },

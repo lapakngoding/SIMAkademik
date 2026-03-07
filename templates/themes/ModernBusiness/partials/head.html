@@ -1,0 +1,26 @@
+{% load static %}
+<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>{% block title %}SIM Sekolah{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'website/assets/favicon.ico' %}" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <link href="{% static 'website/css/styles.css' %}" rel="stylesheet" />
+        
+        <style>
+            /* Mengatur semua gambar di dalam artikel agar responsif */
+            article img, .page-content img {
+                max-width: 100% !important; /* Lebar maksimal 100% dari kontainer */
+                height: auto !important;     /* Tinggi menyesuaikan secara proporsional */
+                border-radius: 8px;          /* Opsional: agar sudutnya melengkung */
+                margin: 15px 0;              /* Opsional: memberi jarak atas bawah */
+                display: block;              /* Agar gambar dianggap sebagai blok */
+            }
+            
+            /* Memperbaiki tabel CKEditor agar tidak meluber juga */
+            article table, .page-content table {
+                width: 100% !important;
+                table-layout: fixed;
+                overflow-wrap: break-word;
+            }
+        </style>
+    

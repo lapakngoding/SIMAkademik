@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        {% include "partials/head.html" %}
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main class="flex-shrink-0">
+         {% include "partials/topbar.html" %}
+         {% include "partials/banner.html" %}
+         {% include "partials/info.html" %}
+         {% include "partials/alamat.html" %}
+        </main>
+        {% include "partials/footer.html" %}
+        {% include "partials/scripts.html" %}
+    </body>
+</html>
