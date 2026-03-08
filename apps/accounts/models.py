@@ -84,7 +84,6 @@ class TeacherProfile(models.Model):
 class StudentProfile(models.Model):
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='student_detail')
     nisn = models.CharField(max_length=20, unique=True)
-    kelas = models.CharField(max_length=20)
     nama_ibu_kandung = models.CharField(max_length=150, blank=True)
     kelas = models.ForeignKey('academics.Classroom', on_delete=models.SET_NULL, null=True, blank=True)
 

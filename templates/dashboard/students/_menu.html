@@ -28,5 +28,11 @@
         <p>Siswa</p>
       </a>
     </li>
+    <li class="nav-item">
+    <a href="{% url 'students:registration_list' %}" class="nav-link {% if 'registrations' in request.path %}active{% endif %}">
+        <i class="fas fa-clipboard-list nav-icon"></i>
+        <p>Pendaftar Baru</p>
+    </a>
+</li>
   </ul>
 </li>

@@ -20,7 +20,9 @@
                 <li class="nav-item">
                     <a class="nav-link {% if 'blog' in request.path %}active{% endif %}" href="{% url 'website:blog_list' %}">Berita</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'registration' in request.path %}active{% endif %}" href="{% url 'students:registration_create' %}">PPDB</a>
+                </li>
                 <li class="nav-item px-lg-2 d-none d-lg-block text-white-50"><span class="nav-link">|</span></li>
 
                 <li class="nav-item">
