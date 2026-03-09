@@ -259,3 +259,23 @@ def student_edit(request, pk):
         'u_form': u_form, 'p_form': p_form, 's_form': s_form, 'title': 'Edit Siswa'
     })
 
+@admin_only
+def student_delete(request, pk):
+    # Cari User-nya langsung (karena pk yang dikirim biasanya ID User)
+    user_to_delete = User.objects.filter(pk=pk, role='student').first()
+    
+    if not user_to_delete:
+        messages.error(request, f"Data siswa dengan ID {pk} tidak ditemukan.")
+        return redirect('accounts:student_list')
+
+    if request.method == 'POST':
+        try:
+            # Hapus User-nya, maka UserProfile & StudentProfile otomatis terhapus (Cascade)
+            nama = user_to_delete.username
+            user_to_delete.delete() 
+            messages.success(request, f"Akun dan profil siswa {nama} berhasil dihapus.")
+        except Exception as e:
+            messages.error(request, f"Gagal menghapus: {str(e)}")
+            
+    return redirect('accounts:student_list')
+

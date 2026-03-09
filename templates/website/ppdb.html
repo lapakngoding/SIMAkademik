@@ -12,7 +12,7 @@
                     <p class="mb-0 opacity-75">Silakan isi data calon siswa dengan lengkap dan benar.</p>
                 </div>
                 <div class="card-body p-5">
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         
                         <h5 class="text-primary mb-4 border-bottom pb-2">Data Pribadi</h5>
@@ -41,11 +41,15 @@
 
                         <h5 class="text-primary mb-4 border-bottom pb-2">Kelahiran & Kontak</h5>
                         <div class="row g-3 mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Nama Ibu</label>
+                                <input type="text" name="nama_ibu_kandung" class="form-control" placeholder="Nama Ibu Kandung / Wali" required>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label fw-bold">Tempat Lahir</label>
                                 <input type="text" name="tempat_lahir" class="form-control" placeholder="Kota kelahiran" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-bold">Tanggal Lahir</label>
                                 <input type="date" name="birth_date" class="form-control" required>
                             </div>
@@ -60,9 +64,19 @@
                         </div>
 
                         <h5 class="text-primary mb-4 border-bottom pb-2">Data Sekolah Asal</h5>
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Nama Sekolah Asal</label>
-                            <input type="text" name="asal_sekolah" class="form-control" placeholder="Contoh: TK Al-Ikhlas" required>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Nama Sekolah Asal</label>
+                                <input type="text" name="asal_sekolah" class="form-control" placeholder="Contoh: TK Al-Ikhlas" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Upload Ijazah</label>
+                                <input type="file" name="ijazah" class="form-control" accept=".pdf,.jpg,.png" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Foto Terbaru</label>
+                                <input type="file" name="foto" class="form-control" accept="image/*" required>
+                            </div>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Alamat Lengkap Domisili</label>

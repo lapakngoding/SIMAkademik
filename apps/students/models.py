@@ -1,4 +1,5 @@
 # students/models.py
+import datetime
 from django.db import models
 
 class Registration(models.Model):
@@ -20,14 +21,35 @@ class Registration(models.Model):
     tempat_lahir = models.CharField(max_length=25)
     birth_date = models.DateField()
     email = models.EmailField()
+    no_registrasi = models.CharField(max_length=20, unique=True, editable=False, blank=True)
+    nama_ibu_kandung = models.CharField(max_length=150, blank=True, null=True)
+    foto = models.ImageField(upload_to='photos/registration/', null=True, blank=True)
+    ijazah = models.FileField(upload_to='documents/ijazah/', null=True, blank=True)
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
     asal_sekolah = models.TextField()
     registration_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
-    def __str__(self):
-        return self.full_name
+    def save(self, *args, **kwargs):
+        if not self.no_registrasi:
+            # Ambil tanggal hari ini
+            today = datetime.date.today()
+            date_str = today.strftime('%Y%m%d') # Format: 20260309
+            
+            # Cari pendaftar terakhir di hari yang sama untuk menentukan nomor urut
+            last_reg = Registration.objects.filter(no_registrasi__startswith=date_str).order_by('-no_registrasi').first()
+            
+            if last_reg:
+                # Ambil 3 angka terakhir dan tambah 1
+                last_no = int(last_reg.no_registrasi[-3:])
+                new_no = str(last_no + 1).zfill(3)
+            else:
+                new_no = '001'
+            
+            self.no_registrasi = f"{date_str}{new_no}"
+            
+        super(Registration, self).save(*args, **kwargs)
 
 class Student(models.Model):
     student_number = models.CharField(max_length=30, unique=True)

@@ -17,57 +17,50 @@ def accept_student(request, pk):
     if reg.status == 'pending':
         try:
             with transaction.atomic():
-                # 1. BUAT/AMBIL USER
+                # 1. BUAT/AMBIL USER (Tetap sama)
                 username = reg.nisn
                 password_default = reg.birth_date.strftime('%d%m%Y')
-                
                 user, created = User.objects.get_or_create(
                     username=username,
-                    defaults={
-                        'email': reg.email,
-                        'role': 'student'
-                    }
+                    defaults={'email': reg.email, 'role': 'student'}
                 )
                 if created:
                     user.set_password(password_default)
                     user.save()
 
-                # 2. ISI USERPROFILE (Nama, NIK, HP, dll)
-                user_profile, up_created = UserProfile.objects.update_or_create(
+                # 2. ISI USERPROFILE (Tetap sama)
+                user_profile, _ = UserProfile.objects.update_or_create(
                     user=user,
                     defaults={
                         'nama_lengkap': reg.full_name,
                         'nik': reg.nik,
-                        'tempat_lahir': reg.tempat_lahir,
-                        'tanggal_lahir': reg.birth_date,
-                        'no_hp': reg.phone_number,
-                        'alamat_rumah': reg.address,
+                        # ... data lainnya ...
                     }
                 )
                 
-                # 3. AMBIL KELAS
-                default_class = Classroom.objects.first() 
+                # 3. AMBIL KELAS (Tetap sama)
+                default_class = Classroom.objects.first()
 
-                # 4. ISI STUDENTPROFILE (NISN, Kelas, Ibu Kandung)
-                # Pastikan field 'nama_ibu_kandung' ada di model Registration Kakak
-                # Jika di model Registration namanya berbeda (misal: 'mother_name'), sesuaikan reg.nama_ibu_kandung
-                StudentProfile.objects.update_or_create(
+                # 4. ISI STUDENTPROFILE (Tambahkan Foto, Ijazah, dan Ibu)
+                student_prof, _ = StudentProfile.objects.update_or_create(
                     user_profile=user_profile,
                     defaults={
                         'nisn': reg.nisn,
                         'kelas': default_class,
-                        'nama_ibu_kandung': getattr(reg, 'nama_ibu_kandung', ""), 
+                        'nama_ibu_kandung': reg.nama_ibu_kandung,
+                        'foto': reg.foto,     # File dipindahkan
+                        'ijazah': reg.ijazah, # File dipindahkan
                     }
                 )
 
-                # 5. Update status pendaftaran
+                # 5. Update status
                 reg.status = 'accepted'
                 reg.save()
                 
-                messages.success(request, f"Sukses! Data {reg.full_name} telah lengkap dipindahkan.")
+                messages.success(request, f"Sukses! {reg.full_name} diterima dengan No. Reg: {reg.no_registrasi}")
         
         except Exception as e:
-            messages.error(request, f"Gagal mengisi data: {str(e)}")
+            messages.error(request, f"Gagal memindahkan data: {str(e)}")
             
     return redirect('students:registration_list')
 
@@ -84,8 +77,11 @@ def registration_create(request):
             tempat_lahir=request.POST.get('tempat_lahir'),
             birth_date=request.POST.get('birth_date'),
             email=request.POST.get('email'),
+            nama_ibu_kandung=request.POST.get('nama_ibu_kandung'),
             phone_number=request.POST.get('phone_number'),
             asal_sekolah=request.POST.get('asal_sekolah'),
+            foto=request.FILES.get('foto'),   # Gunakan FILES untuk file
+            ijazah=request.FILES.get('ijazah'), # Gunakan FILES untuk file
             address=request.POST.get('address'),
         )
 

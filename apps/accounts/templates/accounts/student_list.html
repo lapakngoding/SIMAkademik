@@ -40,9 +40,13 @@
                                     <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-info btn-sm">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('{{ student.pk }}', '{{ student.username }}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <form action="{% url 'accounts:student_delete' student.pk %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    
                                 </td>
                             </tr>
                             {% empty %}

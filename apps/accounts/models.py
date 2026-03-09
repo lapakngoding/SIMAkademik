@@ -86,6 +86,9 @@ class StudentProfile(models.Model):
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='student_detail')
     nisn = models.CharField(max_length=20, unique=True)
     nama_ibu_kandung = models.CharField(max_length=150, blank=True)
+    foto = models.ImageField(upload_to='photos/students/', null=True, blank=True)
+    # Ijazah biasanya masuk ke folder dokumen siswa yang sudah resmi
+    ijazah = models.FileField(upload_to='documents/students/ijazah/', null=True, blank=True)
     kelas = models.ForeignKey('academics.Classroom', on_delete=models.SET_NULL, null=True, blank=True)
 
 
