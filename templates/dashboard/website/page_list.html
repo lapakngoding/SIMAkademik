@@ -31,7 +31,7 @@
                             <td>{{ forloop.counter }}</td>
                             <td><strong>{{ page.title }}</strong></td>
                             <td><small class="text-muted">{{ page.slug }}</small></td>
-                            <td>{{ page.published_at|date:"d M Y H:i" }}</td>
+                            <td>{{ page.created_at|date:"d M Y H:i" }}</td>
                             <td class="text-center">
                                 <a href="{% url 'website:page_edit' page.pk %}" class="btn btn-sm btn-info" title="Edit">
                                     <i class="fas fa-edit"></i>

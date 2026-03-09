@@ -7,6 +7,7 @@ class User(AbstractUser):
         max_length=20,
         choices=(
             ('admin', 'Admin'),
+            ('operator', 'Operator'),
             ('teacher', 'Teacher'),
             ('student', 'Student'),
         ),

@@ -20,6 +20,9 @@ class Page(models.Model):
     # Ganti TextField jadi CKEditor5Field
     content = CKEditor5Field('Content', config_name='default') 
     is_published = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    # auto_now=True akan mengupdate tanggal setiap kali data diedit
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
