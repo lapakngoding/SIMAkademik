@@ -34,7 +34,12 @@ def accept_student(request, pk):
                     defaults={
                         'nama_lengkap': reg.full_name,
                         'nik': reg.nik,
-                        # ... data lainnya ...
+                        'jenis_kelamin': reg.gender,
+                        'tempat_lahir': reg.tempat_lahir,
+                        'tanggal_lahir': reg.birth_date,
+                        'no_hp': reg.phone_number, 
+                        'alamat_rumah': reg.address,
+                        'nama_ibu_kandung': reg.nama_ibu_kandung,
                     }
                 )
                 
@@ -48,8 +53,8 @@ def accept_student(request, pk):
                         'nisn': reg.nisn,
                         'kelas': default_class,
                         'nama_ibu_kandung': reg.nama_ibu_kandung,
-                        'foto': reg.foto,     # File dipindahkan
-                        'ijazah': reg.ijazah, # File dipindahkan
+                        'foto': reg.foto,     
+                        'ijazah': reg.ijazah, 
                     }
                 )
 

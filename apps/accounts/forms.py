@@ -1,7 +1,7 @@
 # apps/accounts/forms.py
 from django import forms
 from django.utils import timezone
-# Sesuaikan dengan model baru Anda
+from apps.academics.models import Classroom
 from .models import User, UserProfile, TeacherProfile, StudentProfile, Post
 
 # Form untuk user auth (Username, Email, dsb)
@@ -50,10 +50,16 @@ class TeacherProfileForm(forms.ModelForm):
 
 # Form khusus SISWA
 class StudentProfileForm(forms.ModelForm):
+    # Pastikan ini ModelChoiceField agar mengambil __str__ dari Classroom
+    kelas = forms.ModelChoiceField(
+        queryset=Classroom.objects.all(),
+        empty_label="-- Pilih Kelas --",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
-        model = StudentProfile # Model baru yang kita rencanakan
-        fields = ['nisn', 'kelas','nama_ibu_kandung']
-        widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
+        model = StudentProfile
+        fields = ['nisn', 'kelas']
 
 
 from django_ckeditor_5.widgets import CKEditor5Widget
