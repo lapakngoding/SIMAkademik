@@ -10,34 +10,22 @@ def registration_create(request):
     school_info = SchoolProfile.objects.first()
 
     if request.method == 'POST':
-        # Ambil semua data dari POST
+        # Gunakan Form, jangan simpan manual lewat objects.create jika ingin validasi
         form = RegistrationForm(request.POST, request.FILES)
-        Registration.objects.create(
-            full_name=request.POST.get('full_name'),
-            gender=request.POST.get('gender'),
-            nisn=request.POST.get('nisn'),
-            nik=request.POST.get('nik'),
-            tempat_lahir=request.POST.get('tempat_lahir'),
-            birth_date=request.POST.get('birth_date'),
-            email=request.POST.get('email'),
-            nama_ibu_kandung=request.POST.get('nama_ibu_kandung'),
-            phone_number=request.POST.get('phone_number'),
-            asal_sekolah=request.POST.get('asal_sekolah'),
-            foto=request.FILES.get('foto'),   # Gunakan FILES untuk file
-            ijazah=request.FILES.get('ijazah'), # Gunakan FILES untuk file
-            address=request.POST.get('address'),
-        )
-
+        
         if form.is_valid():
+            # Simpan data secara otomatis
             registration = form.save()
-            # Redirect ke halaman sukses sambil membawa ID-nya
+            # Redirect menggunakan id dari data yang baru disimpan
             return redirect('website:registration_success', registration_id=registration.id)
     else:
+        # Jika GET (buka halaman pertama kali)
         form = RegistrationForm()
 
-    return render(request, 'website/ppdb.html',{
+    return render(request, 'website/ppdb.html', {
         'school': school_info,
-    
+        'form': form, # Kirim variabel form ke template
+        'title': 'Pendaftaran Siswa Baru',
     })
 
 

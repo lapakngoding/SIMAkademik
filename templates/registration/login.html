@@ -20,6 +20,14 @@
       <h1><b>SIM</b>Sekolah</h1>
     </div>
 
+    {% if messages %}
+    <div class="text-danger text-center mt-2">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
     <div class="card-body">
       <p class="login-box-msg">Silahkan login</p>
     
