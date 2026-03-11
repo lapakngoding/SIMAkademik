@@ -69,35 +69,6 @@ def accept_student(request, pk):
             
     return redirect('students:registration_list')
 
-def registration_create(request):
-    school_info = SchoolProfile.objects.first()
-
-    if request.method == 'POST':
-        # Ambil semua data dari POST
-        Registration.objects.create(
-            full_name=request.POST.get('full_name'),
-            gender=request.POST.get('gender'),
-            nisn=request.POST.get('nisn'),
-            nik=request.POST.get('nik'),
-            tempat_lahir=request.POST.get('tempat_lahir'),
-            birth_date=request.POST.get('birth_date'),
-            email=request.POST.get('email'),
-            nama_ibu_kandung=request.POST.get('nama_ibu_kandung'),
-            phone_number=request.POST.get('phone_number'),
-            asal_sekolah=request.POST.get('asal_sekolah'),
-            foto=request.FILES.get('foto'),   # Gunakan FILES untuk file
-            ijazah=request.FILES.get('ijazah'), # Gunakan FILES untuk file
-            address=request.POST.get('address'),
-        )
-
-        messages.success(request, 'Alhamdulillah, data pendaftaran sudah kami terima!')
-        return redirect('website:home')
-
-    return render(request, 'website/ppdb.html',{
-        'school': school_info,
-    
-    })
-
 def registration_list(request):
     # Mengambil semua pendaftar, yang terbaru di atas
     registrations = Registration.objects.filter(status='pending').order_by('-registration_date')
@@ -113,4 +84,5 @@ class StudentListView(RoleRequiredMixin, ListView):
     template_name = 'students/student_list.html'
     context_object_name = 'students'
     required_role = 'operator'
+
 

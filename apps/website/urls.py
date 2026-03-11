@@ -1,6 +1,7 @@
 from django.urls import path
 #from . import views
-from .views import general, banner, dashboard
+from .views import general, banner, dashboard, registration as reg_views
+from . import views
 
 app_name = 'website'
 
@@ -26,4 +27,8 @@ urlpatterns = [
     path('banners/create/', banner.banner_create, name='banner_create'),
     path('banners/<int:pk>/edit/', banner.banner_edit, name='banner_edit'),
     path('banners/delete/<int:pk>/', banner.banner_delete, name='banner_delete'),
+    path('ppdb/', reg_views.registration_create, name='registration_create'),
+    path('ppdb/sukses/<int:registration_id>/', reg_views.registration_success, name='registration_success'),
+    path('ppdb/cetak-kartu/<int:registration_id>/', reg_views.print_registration_card, name='print_registration_card'),
+   
 ]

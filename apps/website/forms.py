@@ -1,6 +1,7 @@
 from django import forms
 from django.utils import timezone
 from .models import Post, Page, Banner, SchoolProfile
+from apps.students.models import Registration
 from django_ckeditor_5.widgets import CKEditor5Widget
 
 class SchoolProfileForm(forms.ModelForm):
@@ -101,4 +102,18 @@ class BannerForm(forms.ModelForm):
         help_texts = {
             'image': 'Disarankan ukuran 1920x600 px untuk hasil maksimal.',
             'url': 'Gunakan URL lengkap (dengan https://) untuk link luar, atau path (seperti /blog/) untuk link internal.',
+        }
+
+class RegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Registration
+        fields = [
+            'full_name', 'gender', 'nisn', 'nik', 'tempat_lahir', 
+            'birth_date', 'email', 'phone_number', 'address', 'asal_sekolah'
+        ]
+        widgets = {
+            # Bikin input tanggal jadi kalender
+            'birth_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-select'}),
+            'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }

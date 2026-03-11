@@ -1,0 +1,48 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-none border-dashed p-4 mx-auto" id="printableArea" style="max-width: 600px; border: 2px dashed #ccc;">
+        <div class="text-center border-bottom pb-3 mb-4">
+            <h4 class="fw-bold mb-0">BUKTI PENDAFTARAN SISWA BARU</h4>
+            <p class="mb-0">{{ school.name|default:"SIM SEKOLAH" }}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <table class="table table-borderless table-sm">
+                    <tr><td>No. Registrasi</td><td>: <strong>{{ reg.no_registrasi }}</strong></td></tr>
+                    <tr><td>Nama Lengkap</td><td>: {{ reg.full_name }}</td></tr>
+                    <tr><td>NISN</td><td>: {{ reg.nisn }}</td></tr>
+                    <tr><td>Tanggal Daftar</td><td>: {{ reg.created_at|date:"d F Y" }}</td></tr>
+                </table>
+            </div>
+            <div class="col-4 text-center">
+                {% if reg.foto %}
+                    <img src="{{ reg.foto.url }}" class="img-thumbnail" style="width: 100px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <div class="border p-4">Foto 3x4</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-light rounded">
+            <small><strong>Catatan:</strong> Simpan kartu ini sebagai bukti verifikasi saat datang ke sekolah.</small>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 no-print">
+        <button onclick="window.print();" class="btn btn-primary btn-lg">
+            <i class="fas fa-print me-2"></i> Cetak Sekarang
+        </button>
+    </div>
+</div>
+
+<style>
+@media print {
+    .no-print, nav, footer { display: none !important; }
+    .container { width: 100%; padding: 0; }
+    #printableArea { border: 1px solid #000 !important; shadow: none !important; }
+}
+</style>
+{% endblock %}
