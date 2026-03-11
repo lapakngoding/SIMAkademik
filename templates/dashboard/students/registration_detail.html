@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    {% if reg.foto %}
+                        <img src="{{ reg.foto.url }}" class="img-fluid rounded-3 mb-3" style="max-height: 300px;">
+                    {% else %}
+                        <div class="bg-light py-5 rounded-3 mb-3"><i class="fas fa-user fa-5x text-secondary"></i></div>
+                    {% endif %}
+                    <h5 class="fw-bold">{{ reg.full_name }}</h5>
+                    <span class="badge {% if reg.status == 'pending' %}bg-warning{% else %}bg-success{% endif %}">
+                        {{ reg.get_status_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">Data Lengkap</h5>
+                    <a href="{% url 'students:registration_list' %}" class="btn btn-outline-secondary btn-sm">Kembali</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th width="30%">NISN / NIK</th><td>{{ reg.nisn }} / {{ reg.nik }}</td></tr>
+                        <tr><th>Tempat, Tgl Lahir</th><td>{{ reg.tempat_lahir }}, {{ reg.birth_date|date:"d F Y" }}</td></tr>
+                        <tr><th>Jenis Kelamin</th><td>{{ reg.get_gender_display }}</td></tr>
+                        <tr><th>Nama Ibu Kandung</th><td>{{ reg.nama_ibu_kandung }}</td></tr>
+                        <tr><th>No. WhatsApp</th><td>{{ reg.phone_number }}</td></tr>
+                        <tr><th>Alamat</th><td>{{ reg.address }}</td></tr>
+                        <tr>
+                            <th>Ijazah</th>
+                            <td>
+                                {% if reg.ijazah %}
+                                    <a href="{{ reg.ijazah.url }}" target="_blank" class="btn btn-info btn-sm text-white">
+                                        <i class="fas fa-file-download me-1"></i> Lihat Ijazah
+                                    </a>
+                                {% else %}
+                                    <span class="text-danger">Belum Upload</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+
+                    {% if reg.status == 'pending' %}
+                    <div class="mt-4 border-top pt-3 text-end">
+                        <a href="{% url 'students:accept_student' reg.pk %}" class="btn btn-success btn-lg px-4">
+                            <i class="fas fa-check me-2"></i>Terima Calon Siswa
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

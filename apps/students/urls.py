@@ -25,6 +25,7 @@ urlpatterns = [
     path('', StudentListView.as_view(), name='student_list'),
     #path('daftar/', views.registration_create, name='registration_create'),
     path('registrations/', views.registration_list, name='registration_list'),
+    path('pendaftaran/<int:pk>/detail/', views.registration_detail, name='registration_detail'),
     path('accept/<int:pk>/', views.accept_student, name='accept_student'),
     #path('', views.student_list, name='student_list'),
     #path('add/', views.student_create, name='student_add'),

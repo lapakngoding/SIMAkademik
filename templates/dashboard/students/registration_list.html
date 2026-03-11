@@ -2,54 +2,91 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-users-list me-2"></i>Data Calon Siswa Baru</h5>
+    <div class="card card-primary card-outline card-outline-tabs shadow-sm border-0">
+        <div class="card-header p-0 border-bottom-0 bg-white">
+            <ul class="nav nav-tabs" id="ppdbTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active fw-bold" data-toggle="tab" href="#pending" role="tab">
+                        <i class="fas fa-clock me-1"></i> Pending
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-bold" data-toggle="tab" href="#accepted" role="tab">
+                        <i class="fas fa-check-circle me-1"></i> Diterima
+                    </a>
+                </li>
+            </ul>
         </div>
+        
         <div class="card-body">
-            <ul class="nav nav-tabs mb-3" id="ppdbTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="pending-tab" data-bs-toggle="tab" href="#pending" role="tab">Pending</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="accepted-tab" data-bs-toggle="tab" href="#accepted" role="tab">Diterima</a>
-  </li>
-</ul>
+            <div class="tab-content" id="ppdbTabContent">
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nama Lengkap</th>
+                                    <th>NISN</th>
+                                    <th class="text-end">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reg in registrations %}
+                                    {% if reg.status == 'pending' %}
+                                    <tr>
+                                        <td>{{ reg.full_name }}</td>
+                                        <td><code>{{ reg.nisn }}</code></td>
+                                        <td class="text-end">
+                                            <a href="{% url 'students:registration_detail' reg.pk %}" class="btn btn-info btn-sm text-white">
+                                                <i class="fas fa-eye"></i> Detail
+                                            </a>
+                                            <a href="{% url 'students:accept_student' reg.pk %}" class="btn btn-success btn-sm" onclick="return confirm('Terima siswa ini?')">
+                                                <i class="fas fa-user-plus"></i> Terima
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-4">Tidak ada data pending.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-<div class="tab-content" id="ppdbTabContent">
-  <div class="tab-pane fade show active" id="pending" role="tabpanel">
-    <table class="table table-hover">
-        <thead>...</thead>
-        <tbody>
-            {% for reg in registrations %}
-                {% if reg.status == 'pending' %}
-                <tr>
-                    <td>{{ reg.full_name }}</td>
-                    <td><a href="{% url 'students:accept_student' reg.pk %}" class="btn btn-success btn-sm">Terima</a></td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-  </div>
-
-  <div class="tab-pane fade" id="accepted" role="tabpanel">
-    <table class="table table-hover">
-        <thead>...</thead>
-        <tbody>
-            {% for reg in registrations %}
-                {% if reg.status == 'accepted' %}
-                <tr>
-                    <td>{{ reg.full_name }}</td>
-                    <td><span class="badge bg-success">Sudah Jadi Murid</span></td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-  </div>
-</div>
-        </div>
-    </div>
-</div>
+                <div class="tab-pane fade" id="accepted" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nama Lengkap</th>
+                                    <th>NISN</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reg in registrations %}
+                                    {% if reg.status == 'accepted' %}
+                                    <tr>
+                                        <td>{{ reg.full_name }}</td>
+                                        <td><code>{{ reg.nisn }}</code></td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i> Sudah Jadi Murid
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-4">Belum ada siswa yang diterima.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> </div> </div> </div>
 {% endblock %}

@@ -15,7 +15,7 @@ class Registration(models.Model):
     ]
     
     full_name = models.CharField(max_length=200)
-    gender = models.CharField(max_length=20)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nisn = models.CharField(max_length=20)
     nik = models.CharField(max_length=20)
     tempat_lahir = models.CharField(max_length=25)

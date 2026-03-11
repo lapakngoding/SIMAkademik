@@ -30,14 +30,17 @@ def registration_create(request):
 
 
 def registration_success(request, registration_id):
+    school_info = SchoolProfile.objects.first()
     reg = get_object_or_404(Registration, id=registration_id)
-    return render(request, 'website/registration_success.html', {'reg': reg})
+    return render(request, 'website/registration_success.html', {'school': school_info,'reg': reg})
 
 def print_registration_card(request, registration_id):
+    school_info = SchoolProfile.objects.first()
     # Ambil data pendaftaran berdasarkan ID
     registration = get_object_or_404(Registration, id=registration_id)
     
     context = {
+        'school': school_info,
         'reg': registration,
         'title': 'Kartu Bukti Pendaftaran',
     }
