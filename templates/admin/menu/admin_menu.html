@@ -40,6 +40,35 @@
     </li>
 </ul>
 </li>
+
+<li class="nav-item {% if 'classrooms' in request.path or 'subjects' in request.path %}menu-open{% endif %}">
+  <a href="#" class="nav-link {% if 'classrooms' in request.path or 'subjects' in request.path %}active{% endif %}">
+    <i class="nav-icon fas fa-graduation-cap"></i>
+    <p>
+      Manajemen Akademik
+      <i class="right fas fa-angle-left"></i>
+    </p>
+  </a>
+
+  <ul class="nav nav-treeview">
+    <li class="nav-item">
+      <a href="{% url 'academics:classroom_list' %}" 
+         class="nav-link {% if 'classrooms' in request.path %}active{% endif %}">
+        <i class="fas fa-door-open nav-icon"></i>
+        <p {% if 'classrooms' in request.path %}class="font-weight-bold"{% endif %}>Data Kelas</p>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'academics:subject_list' %}" 
+         class="nav-link {% if 'subjects' in request.path %}active{% endif %}">
+        <i class="fas fa-book nav-icon"></i>
+        <p {% if 'subjects' in request.path %}class="font-weight-bold"{% endif %}>Mata Pelajaran</p>
+      </a>
+    </li>
+  </ul>
+</li>
+
 <li class="nav-item {% if 'post' in request.path or 'page' in request.path or 'banners' in request.path or 'ProfileSekolah' in request.path %}menu-open{% endif %}">
   
   <a href="#" class="nav-link {% if 'post' in request.path or 'page' in request.path or 'banners' in request.path or 'ProfileSekolah' in request.path %}active{% endif %}">

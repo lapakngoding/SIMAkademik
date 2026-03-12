@@ -22,15 +22,16 @@ from apps.accounts.views import RoleBasedLoginView
 from django.conf import settings # Tambahkan ini
 from django.conf.urls.static import static
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # LOGIN (custom, role-based)
-    path('login/', RoleBasedLoginView.as_view(), name='login'),
+    #path('login/', RoleBasedLoginView.as_view(), name='login'),
 
     # LOGOUT
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='accounts:login'), name='logout'),
 
     # APPS
     path('accounts/', include('apps.accounts.urls')),

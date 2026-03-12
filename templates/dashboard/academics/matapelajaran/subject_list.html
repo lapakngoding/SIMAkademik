@@ -1,0 +1,42 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-3">
+        <a href="{% url 'academics:subject_create' %}" class="btn btn-info text-white shadow-sm">
+            <i class="fas fa-book-open me-1"></i> Tambah Mata Pelajaran
+        </a>
+    </div>
+
+    <div class="card card-outline card-info shadow-sm">
+        <div class="card-header">
+            <h3 class="card-title">Master Mata Pelajaran</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Kode</th>
+                        <th>Nama Mapel</th>
+                        <th>Guru Pengampu</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                    <tr>
+                        <td><code>{{ subject.kode }}</code></td>
+                        <td>{{ subject.nama }}</td>
+                        <td>{{ subject.pengampu.get_full_name }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'academics:subject_edit' subject.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'academics:subject_delete' subject.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-primary shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {% if object %} Edit Kelas {{ object.nama }} {% else %} Tambah Kelas Baru {% endif %}
+                    </h3>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        {{ form|crispy }}
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success">Simpan Data</button>
+                        <a href="{% url 'academics:classroom_list' %}" class="btn btn-secondary">Batal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
