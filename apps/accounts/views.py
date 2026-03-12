@@ -35,7 +35,7 @@ def unlock_screen(request):
 
         messages.error(request, 'Password salah')
 
-    return redirect('lock_screen')
+    return redirect('accounts:lock_screen')
 
 def profile_view(request):
     user = request.user

@@ -3,24 +3,155 @@
 {% block title %}SIMSekolah | Dashboard{% endblock %}
 
 {% block content %}
-
-<div class="row">
+<div class="container-fluid">
+  <div class="row">
     
-  <div class="col-lg-3 col-6">
-    <div class="small-box bg-info">
-  <div class="inner">
-    <h3>{{ total_siswa }}</h3>
-    <p>Total Siswa</p>
-  </div>
-  <div class="icon">
-    <i class="fas fa-user-graduate"></i>
-  </div>
-  <a href="#" class="small-box-footer">
-    Detail <i class="fas fa-arrow-circle-right"></i>
-  </a>
-</div>
-  </div>
-  
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-info shadow-sm">
+        <div class="inner">
+          <h3>{{ total_guru }}</h3>
+          <p>Total Guru</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <a href="{% url 'accounts:teacher_list' %}" class="small-box-footer">Selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-success shadow-sm">
+        <div class="inner">
+          <h3>{{ total_siswa }}</h3>
+          <p>Total Siswa Aktif</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <a href="{% url 'accounts:student_list' %}" class="small-box-footer">Selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-warning shadow-sm">
+        <div class="inner">
+          <h3>{{ total_pendaftar }}</h3>
+          <p>Total Pendaftar PPDB</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <a href="{% url 'students:registration_list' %}" class="small-box-footer">Lihat PPDB <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+      <div class="small-box bg-danger shadow-sm">
+        <div class="inner">
+          <h3>{{ pendaftar_pending }}</h3>
+          <p>Butuh Konfirmasi</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <a href="{% url 'students:registration_list' %}" class="small-box-footer">Proses Sekarang <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-line me-1"></i> Grafik Pendaftaran Siswa Baru</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="registrationChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header border-transparent">
+                <h3 class="card-title"><i class="fas fa-history me-1"></i> Aktivitas Pendaftaran Terakhir</h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0 table-hover">
+                        <thead>
+                            <tr>
+                                <th>No. Reg</th>
+                                <th>Nama Calon Siswa</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activities %}
+                            <tr>
+                                <td><a href="#">{{ activity.no_registrasi }}</a></td>
+                                :<td>{{ activity.full_name }}</td>
+                                <td>
+                                    {% if activity.status == 'pending' %}
+                                        <span class="badge badge-warning">Pending</span>
+                                    {% elif activity.status == 'accepted' %}
+                                        <span class="badge badge-success">Diterima</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">{{ activity.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ activity.registration_date|date:"d M Y" }}</td>
+                                <td>
+                                    <a href="{% url 'students:registration_detail' activity.pk %}" class="btn btn-xs btn-primary">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Belum ada aktivitas pendaftaran.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer clearfix">
+                <a href="{% url 'students:registration_list' %}" class="btn btn-sm btn-secondary float-right">Lihat Semua Pendaftaran</a>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('registrationChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Jumlah Pendaftar',
+                data: {{ chart_data|safe }},
+                backgroundColor: 'rgba(60,141,188,0.2)',
+                borderColor: 'rgba(60,141,188,1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+</div>
 {% endblock %}

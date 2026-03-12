@@ -47,12 +47,12 @@
   </div>
 
   {% if messages %}
-    <div class="text-danger text-center mt-2">
-      {% for message in messages %}
-        {{ message }}
-      {% endfor %}
-    </div>
-  {% endif %}
+    {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
   <div class="help-block text-center">
     Session masih aktif, masukkan password untuk lanjut
