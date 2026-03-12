@@ -74,8 +74,15 @@ def registration_list(request):
     # Mengambil semua pendaftar, yang terbaru di atas
     registrations = Registration.objects.all().order_by('-id')
     
+    stats = {
+        'total': registrations.count(),
+        'pending': registrations.filter(status='pending').count(),
+        'accepted': registrations.filter(status='accepted').count(),
+    }
+    
     return render(request, 'dashboard/students/registration_list.html', {
         'registrations': registrations,
+        'stats': stats,
         'title': 'Permohonan Pendaftaran Baru'
     })
 

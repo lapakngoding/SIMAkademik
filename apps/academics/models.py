@@ -3,7 +3,7 @@ from django.db import models
 from apps.accounts.models import User # Mengacu ke Custom User Anda
 
 class Classroom(models.Model):
-    nama = models.CharField(max_length=50) # Contoh: X-IPA-1
+    nama = models.CharField(max_length=50) # Contoh: 1A
     wali_kelas = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'teacher'})
 
     def __str__(self):

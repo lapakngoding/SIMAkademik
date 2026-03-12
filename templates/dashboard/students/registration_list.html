@@ -2,6 +2,37 @@
 
 {% block content %}
 <div class="container-fluid py-4">
+    <div class="row">
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-info shadow-sm">
+            <div class="inner">
+                <h3>{{ stats.total }}</h3>
+                <p>Total Pendaftar</p>
+            </div>
+            <div class="icon"><i class="fas fa-users"></i></div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-warning shadow-sm">
+            <div class="inner">
+                <h3>{{ stats.pending }}</h3>
+                <p>Calon Siswa (Pending)</p>
+            </div>
+            <div class="icon"><i class="fas fa-user-clock"></i></div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-12">
+        <div class="small-box bg-success shadow-sm">
+            <div class="inner">
+                <h3>{{ stats.accepted }}</h3>
+                <p>Siswa Diterima</p>
+            </div>
+            <div class="icon"><i class="fas fa-user-graduate"></i></div>
+        </div>
+    </div>
+</div>
     <div class="card card-primary card-outline card-outline-tabs shadow-sm border-0">
         <div class="card-header p-0 border-bottom-0 bg-white">
             <ul class="nav nav-tabs" id="ppdbTab" role="tablist">
