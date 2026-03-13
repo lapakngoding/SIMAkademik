@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from apps.accounts.mixins import RoleRequiredMixin
 from ..models import Classroom
+from django.contrib import messages
 
 class ClassroomListView(RoleRequiredMixin, ListView):
     model = Classroom
@@ -20,6 +21,10 @@ class ClassroomUpdateView(RoleRequiredMixin, UpdateView):
     fields = ['nama', 'wali_kelas']
     template_name = 'dashboard/academics/classroom/classroom_form.html'
     success_url = reverse_lazy('academics:classroom_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Kelas berhasil diperbarui!")
+        return super().form_valid(form)
 
 class ClassroomDeleteView(RoleRequiredMixin, DeleteView):
     model = Classroom

@@ -1,0 +1,22 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card card-danger shadow-sm">
+        <div class="card-header">
+            <h3 class="card-title">Konfirmasi Hapus</h3>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="card-body">
+                <p>Apakah Anda yakin ingin menghapus mata pelajaran <strong>{{ object.nama }}</strong> ({{ object.kode }})?</p>
+                <p class="text-muted small">Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-danger">Ya, Hapus Tetap</button>
+                <a href="{% url 'academics:subject_list' %}" class="btn btn-secondary">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

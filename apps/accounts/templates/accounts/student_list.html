@@ -5,6 +5,13 @@
 
 {% block content %}
 <div class="container-fluid">
+{% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="row">
         <div class="col-12">
             <div class="card">

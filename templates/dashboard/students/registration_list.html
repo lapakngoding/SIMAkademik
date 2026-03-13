@@ -33,6 +33,14 @@
         </div>
     </div>
 </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="card card-primary card-outline card-outline-tabs shadow-sm border-0">
         <div class="card-header p-0 border-bottom-0 bg-white">
             <ul class="nav nav-tabs" id="ppdbTab" role="tablist">

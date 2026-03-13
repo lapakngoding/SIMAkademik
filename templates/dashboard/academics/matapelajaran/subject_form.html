@@ -1,0 +1,98 @@
+{% extends "dashboard/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}SIMSekolah | {% if object %}Edit{% else %}Tambah{% endif %} Mata Pelajaran{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card card-outline card-info shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-book-open mr-1"></i>
+                        {% if object %} Edit Mapel: {{ object.nama }} {% else %} Tambah Mata Pelajaran Baru {% endif %}
+                    </h3>
+                </div>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.kode.id_for_label }}">Kode Mapel</label>
+                                    {% render_field form.kode class="form-control" placeholder="Contoh: MTK-01" %}
+                                    {% if form.kode.errors %}
+                                        <div class="text-danger small">{{ form.kode.errors }}</div>
+                                    {% endif %}
+                                    <small class="text-muted">Gunakan kode unik maksimal 10 karakter.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="{{ form.nama.id_for_label }}">Nama Mata Pelajaran</label>
+                                    {% render_field form.nama class="form-control" placeholder="Contoh: Matematika Wajib" %}
+                                    {% if form.nama.errors %}
+                                        <div class="text-danger small">{{ form.nama.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <label for="{{ form.pengampu.id_for_label }}">Guru Pengampu</label>
+                            {% render_field form.pengampu class="form-control select2" %}
+                            {% if form.pengampu.errors %}
+                                <div class="text-danger small">{{ form.pengampu.errors }}</div>
+                            {% endif %}
+                            <p class="text-muted small mt-1">
+                                <i class="fas fa-info-circle"></i> Hanya user dengan role <strong>Guru</strong> yang muncul di pilihan ini.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-right">
+                        <a href="{% url 'academics:subject_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-1"></i> Batal
+                        </a>
+                        <button type="submit" class="btn btn-info">
+                            <i class="fas fa-save mr-1"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-light shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title text-info"><i class="fas fa-lightbulb"></i> Tips</h3>
+                </div>
+                <div class="card-body small">
+                    <ul>
+                        <li>Pastikan <strong>Kode Mapel</strong> belum pernah digunakan sebelumnya.</li>
+                        <li>Satu Mata Pelajaran hanya bisa diampu oleh satu <strong>Guru Utama</strong> dalam model ini.</li>
+                        <li>Jika Guru pengampu belum terdaftar, silakan buat akun Guru terlebih dahulu di menu <strong>Manajemen User</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Jika Suhu pakai Select2 buat dropdown biar bisa search nama guru
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            placeholder: "-- Pilih Guru --"
+        });
+    });
+</script>
+{% endblock %}

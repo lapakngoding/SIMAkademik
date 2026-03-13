@@ -2,6 +2,13 @@
 
 {% block content %}
 <div class="container-fluid">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="mb-3">
         <a href="{% url 'academics:subject_create' %}" class="btn btn-info text-white shadow-sm">
             <i class="fas fa-book-open me-1"></i> Tambah Mata Pelajaran
@@ -27,7 +34,13 @@
                     <tr>
                         <td><code>{{ subject.kode }}</code></td>
                         <td>{{ subject.nama }}</td>
-                        <td>{{ subject.pengampu.get_full_name }}</td>
+                        <td>
+                            {% if subject.pengampu.get_full_name %}
+                                {{ subject.pengampu.get_full_name }}
+                            {% else %}
+                                {{ subject.pengampu.username }}
+                            {% endif %}
+                        </td>
                         <td class="text-center">
                             <a href="{% url 'academics:subject_edit' subject.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
                             <a href="{% url 'academics:subject_delete' subject.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
