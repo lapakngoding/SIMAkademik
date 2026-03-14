@@ -13,6 +13,44 @@
   <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
 
   {% block extra_css %}{% endblock %}
+<style>
+/* Memaksa Breadcrumb sejajar di tengah navbar */
+.main-header .breadcrumb {
+    background-color: transparent !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 100%; /* Agar mengikuti tinggi navbar */
+}
+
+/* Mengatur jarak antar item */
+.main-header .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem; /* Sedikit lebih kecil agar elegan */
+}
+
+/* Mempercantik separator (garis miring) */
+.main-header .breadcrumb-item + .breadcrumb-item::before {
+    content: "/" !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: #ced4da !important;
+}
+
+/* Menghilangkan dekorasi link */
+.main-header .breadcrumb-item a {
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.main-header .breadcrumb-item a:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+</style>
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -22,8 +60,6 @@
   {% include "admin/partials/sidebar.html" %}
 
   <div class="content-wrapper">
-
-    {% include "admin/partials/breadcrumbs.html" %}
 
     <section class="content pt-3">
       <div class="container-fluid">

@@ -55,12 +55,12 @@ def profile_view(request):
         
         if base_form.is_valid():
             base_form.save()
-            print("LOG: Data tersimpan")
+            messages.success(request, f'data {user.username} berhasil dirubah!')
             return redirect('accounts:profile')
         else:
-            print("LOG: Form error:", base_form.errors)
+             messages.error(request, 'Terjadi kesalahan. Data Gagal dirubah!.')
 
-    # 3. Sekarang base_form selalu ada, tidak akan error lagi
+    
     return render(request, 'accounts/profile.html', {
         'base_form': base_form
     })
