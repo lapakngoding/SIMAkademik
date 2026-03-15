@@ -41,12 +41,24 @@ class BaseProfileForm(forms.ModelForm):
         )
         
 
-# Form khusus GURU
+
+# apps/accounts/forms.py
+
 class TeacherProfileForm(forms.ModelForm):
     class Meta:
-        model = TeacherProfile # Model baru yang kita rencanakan
-        fields = ['nip_nuptk', 'jabatan', 'pangkat_golongan']
-        widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
+        model = TeacherProfile
+        fields = [
+            'nip_nuptk', 'jabatan', 'pangkat_golongan', 
+            'foto', 'ijazah', 'scan_ktp', 'scan_kk', 'scan_sk'
+        ]
+        # Kita gunakan widget FileInput agar tidak muncul link "Currently" bawaan Django yang berantakan
+        widgets = {
+            'foto': forms.FileInput(attrs={'class': 'custom-file-input'}),
+            'ijazah': forms.FileInput(attrs={'class': 'custom-file-input'}),
+            'scan_ktp': forms.FileInput(attrs={'class': 'custom-file-input'}),
+            'scan_kk': forms.FileInput(attrs={'class': 'custom-file-input'}),
+            'scan_sk': forms.FileInput(attrs={'class': 'custom-file-input'}),
+        }
 
 # Form khusus SISWA
 class StudentProfileForm(forms.ModelForm):

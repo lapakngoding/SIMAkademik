@@ -67,9 +67,7 @@ class UserProfile(models.Model):
     # ======================
     # Dokumen
     # ======================
-    scan_ktp = models.FileField(upload_to='documents/ktp/', blank=True, null=True)
-    scan_kk = models.FileField(upload_to='documents/kk/', blank=True, null=True)
-    scan_sk = models.FileField(upload_to='documents/sk/', blank=True, null=True)
+    
 
     def __str__(self):
         return self.user.username
@@ -77,6 +75,11 @@ class UserProfile(models.Model):
 
 class TeacherProfile(models.Model):
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='teacher_detail')
+    foto = models.ImageField(upload_to='photos/teachers/', null=True, blank=True)
+    ijazah = models.FileField(upload_to='documents/teachers/ijazah/', null=True, blank=True)
+    scan_ktp = models.FileField(upload_to='documents/teachers/ktp/', blank=True, null=True)
+    scan_kk = models.FileField(upload_to='documents/teachers/kk/', blank=True, null=True)
+    scan_sk = models.FileField(upload_to='documents/teachers/sk/', blank=True, null=True)
     nip_nuptk = models.CharField(max_length=20, unique=True, null=True, blank=True)
     jabatan = models.CharField(max_length=100)
     pangkat_golongan = models.CharField(max_length=50, blank=True)

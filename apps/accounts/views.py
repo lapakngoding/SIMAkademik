@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import update_session_auth_hash # Penting agar tidak logout pas ganti password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -6,6 +8,7 @@ from django.contrib.auth.views import LoginView
 from .utils import get_user_role
 from .forms import UserForm, BaseProfileForm, TeacherProfileForm, StudentProfileForm
 from .models import User, UserProfile, TeacherProfile, StudentProfile
+from apps.website.models import SchoolProfile
 from .decorators import admin_only
 
 class RoleBasedLoginView(LoginView):
@@ -37,34 +40,60 @@ def unlock_screen(request):
 
     return redirect('accounts:lock_screen')
 
+# apps/accounts/views.py
+@login_required
 def profile_view(request):
+    school_info = SchoolProfile.objects.first()
     user = request.user
-    # Pastikan user sudah login
-    if not user.is_authenticated:
-        return redirect('login')
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    
+    # Inisialisasi variabel detail
+    teacher_detail = None
+    student_detail = None
+    profile_form = None
 
-    # Ambil atau buat profil
-    profile, created = UserProfile.objects.get_or_create(user=user)
+    # Logika Percabangan Role
+    if user.role == 'teacher':
+        teacher_detail, _ = TeacherProfile.objects.get_or_create(user_profile=profile)
+        # Jika POST, gunakan TeacherProfileForm
+        if request.method == 'POST':
+            profile_form = TeacherProfileForm(request.POST, request.FILES, instance=teacher_detail)
+        else:
+            profile_form = TeacherProfileForm(instance=teacher_detail)
 
-    # 1. DEFINISIKAN VARIABEL SEBELUM BLOK IF/ELSE
-    base_form = BaseProfileForm(instance=profile)
+    elif user.role == 'student':
+        student_detail, _ = StudentProfile.objects.get_or_create(user_profile=profile)
+        # Jika POST, gunakan StudentProfileForm
+        if request.method == 'POST':
+            profile_form = StudentProfileForm(request.POST, request.FILES, instance=student_detail)
+        else:
+            profile_form = StudentProfileForm(instance=student_detail)
 
     if request.method == 'POST':
-        # 2. Re-inisialisasi form dengan data POST
+        u_form = UserForm(request.POST, instance=user)
         base_form = BaseProfileForm(request.POST, request.FILES, instance=profile)
         
-        if base_form.is_valid():
+        # Validasi (profile_form akan menyesuaikan form apa yang diisi di atas)
+        is_sub_profile_valid = profile_form.is_valid() if profile_form else True
+        
+        if u_form.is_valid() and base_form.is_valid() and is_sub_profile_valid:
+            u_form.save()
             base_form.save()
-            messages.success(request, f'data {user.username} berhasil dirubah!')
+            if profile_form:
+                profile_form.save()
+            messages.success(request, 'Profil berhasil diperbarui!')
             return redirect('accounts:profile')
-        else:
-             messages.error(request, 'Terjadi kesalahan. Data Gagal dirubah!.')
+    else:
+        u_form = UserForm(instance=user)
+        base_form = BaseProfileForm(instance=profile)
 
-    
     return render(request, 'accounts/profile.html', {
-        'base_form': base_form
+        'u_form': u_form,
+        'base_form': base_form,
+        'profile_form': profile_form, # Ini bisa berisi form Guru atau Siswa
+        'profile': profile,
+        'school': school_info,
     })
-
 
 # LIST GURU
 @admin_only
