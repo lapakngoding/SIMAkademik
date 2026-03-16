@@ -2,16 +2,25 @@
 {% if user.is_authenticated %}
     <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
         <div class="image">
-            <img src="{% if user.role == 'teacher' and user.userprofile.teacher_detail.foto %}{{ user.userprofile.teacher_detail.foto.url }}{% elif user.role == 'student' and user.userprofile.student_detail.foto %}{{ user.userprofile.student_detail.foto.url }}{% else %}{% static 'img/gurulaki.jpg' %}{% endif %}" 
-                 class="elevation-2" 
-                 alt="User Image"
-                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px; border: 2px solid rgba(255,255,255,0.2);">
+           <img src="{% if user.role == 'student' and user.student_profile.foto %}{{ user.student_profile.foto.url }}{% elif user.role == 'teacher' and user.teacher_profile.foto %}{{ user.teacher_profile.foto.url }}{% else %}{% static 'img/gurulaki.jpg' %}{% endif %}" 
+     class="elevation-2" 
+     style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px; border: 2px solid rgba(255,255,255,0.1); transition: transform .3s ease;"
+     onmouseover="this.style.transform='scale(1.1)'"
+     onmouseout="this.style.transform='scale(1)'">
         </div>
         <div class="info ml-3"> 
-            <a href="{% url 'accounts:profile' %}" class="d-block" 
-               style="font-size: 1.1rem; font-weight: 600; line-height: 1.1; color: #fff;">
-                {{ user.userprofile.nama_lengkap|default:user.username }}
-            </a>
+            <a href="{% if user.role == 'student' %}{% url 'students:profile' %}{% elif user.role == 'teacher' %}{% url 'teachers:profile' %}{% else %}{% url 'accounts:profile' %}{% endif %}" 
+   class="d-block" 
+   style="font-size: 1.1rem; font-weight: 600; line-height: 1.1; color: #fff;">
+   
+    {% if user.role == 'student' %}
+        {{ user.student_profile.nama_lengkap|default:user.username }}
+    {% elif user.role == 'teacher' %}
+        {{ user.teacher_profile.nama_lengkap|default:user.username }}
+    {% else %}
+        {{ user.username }}
+    {% endif %}
+</a>
             <span class="badge badge-info mt-1 d-inline-flex align-items-center" 
                   style="font-size: 12px; padding: 4px 10px; letter-spacing: 0.5px; border-radius: 50px;"> 
                 <i class="fas fa-circle mr-2" style="font-size: 8px; color: #28a745; text-shadow: 0 0 8px #28a745, 0 0 12px #ffffff;"></i> 

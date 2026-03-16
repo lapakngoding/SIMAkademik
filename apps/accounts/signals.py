@@ -6,11 +6,14 @@ from .models import User, UserProfile, TeacherProfile, StudentProfile # Perhatik
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        profile = UserProfile.objects.create(user=instance)
+        # 1. Buat UserProfile (Data Dasar)
+        profile = UserProfile.objects.get_or_create(user=instance)[0]
+        
+        # 2. Buat Detail Spesifik
         if instance.role == 'teacher':
-            TeacherProfile.objects.create(user_profile=profile)
+            TeacherProfile.objects.get_or_create(user_profile=profile)
         elif instance.role == 'student':
-            StudentProfile.objects.create(user_profile=profile)
+            StudentProfile.objects.get_or_create(user_profile=profile)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):

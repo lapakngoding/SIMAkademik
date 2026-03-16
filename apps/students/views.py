@@ -1,26 +1,31 @@
+# apps/students/views.py
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.db import transaction
-from django.contrib.auth import get_user_model
-from .models import Student, Registration
-from apps.accounts.models import UserProfile, StudentProfile
 from django.views.generic import ListView
+
+# Import dari aplikasi sendiri
+from .models import Student, Registration, StudentProfile
+from .forms import StudentProfileForm
+
+# Import dari aplikasi lain
+from apps.accounts.forms import UserForm
 from apps.accounts.mixins import RoleRequiredMixin
 from apps.website.models import SchoolProfile
 from apps.academics.models import Classroom
 
+# Definisi User
 User = get_user_model()
 
 @transaction.atomic
 def accept_student(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
     
-    if registration.status == 'accepted':
-        messages.warning(request, "Siswa ini sudah pernah diterima.")
-        return redirect('students:registration_list')
+    # ... pengecekan status ...
 
-    # 1. Buat User BARU
-    # Cek dulu supaya tidak error kalau username sudah ada
+    # 1. Buat User BARU (Login Akun)
     user, created = User.objects.get_or_create(
         username=registration.nisn,
         defaults={
@@ -34,36 +39,22 @@ def accept_student(request, pk):
         user.set_password('password123')
         user.save()
 
-    # 2. Update atau Buat UserProfile
-    # Jika Kakak pakai Signal, profil mungkin sudah ada. 
-    # Kita gunakan update_or_create agar tidak bentrok.
-    user_profile, _ = UserProfile.objects.update_or_create(
-        user=user,
+    # 2. Langsung buat StudentProfile (Aplikasi Students)
+    # Kita tidak lagi pakai UserProfile dari apps.accounts
+    StudentProfile.objects.update_or_create(
+        user=user, # Hubungkan langsung ke User
         defaults={
             'nama_lengkap': registration.full_name,
-            'nik': registration.nik,
-            'jenis_kelamin': registration.gender,
+            'nisn': registration.nisn,
             'tempat_lahir': registration.tempat_lahir,
             'tanggal_lahir': registration.birth_date,
             'nama_ibu_kandung': registration.nama_ibu_kandung,
-            'no_hp': registration.phone_number,
-            'alamat_rumah': registration.address
-        }
-    )
-
-    # 3. Buat StudentProfile
-    # Gunakan update_or_create juga demi keamanan data
-    StudentProfile.objects.update_or_create(
-        user_profile=user_profile,
-        defaults={
-            'nisn': registration.nisn,
-            'nama_ibu_kandung': registration.nama_ibu_kandung,
             'foto': registration.foto,
-            'ijazah': registration.ijazah
+            'ijazah': registration.ijazah # Pastikan field ini ada di model StudentProfile
         }
     )
 
-    # 4. Update status pendaftaran
+    # 3. Update status pendaftaran
     registration.status = 'accepted'
     registration.save()
 
@@ -86,6 +77,90 @@ def registration_list(request):
         'title': 'Permohonan Pendaftaran Baru'
     })
 
+@login_required
+def profile_view(request):
+    # 1. Proteksi Role: Hanya student yang boleh masuk sini
+    if request.user.role != 'student':
+        messages.error(request, 'Akses ditolak. Anda bukan siswa.')
+        return redirect('dashboard')
+
+    # 2. Ambil data profil student
+    # Gunakan related_name 'student_profile' sesuai model baru
+    profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        # u_form untuk Akun (Username/Password)
+        u_form = UserForm(request.POST, instance=request.user)
+        # p_form untuk Profil Siswa (Nama, Foto, Lahir, dll)
+        p_form = StudentProfileForm(request.POST, request.FILES, instance=profile)
+
+        if u_form.is_valid() and p_form.is_valid():
+            # Proses Simpan User & Password
+            user_obj = u_form.save(commit=False)
+            password = u_form.cleaned_data.get('password')
+            if password:
+                user_obj.set_password(password)
+            user_obj.save()
+            
+            # Update session supaya tidak logout otomatis
+            update_session_auth_hash(request, user_obj)
+            
+            # Simpan data profil siswa
+            p_form.save()
+            
+            messages.success(request, 'Profil Anda berhasil diperbarui!')
+            return redirect('students:profile')
+        else:
+            messages.error(request, 'Gagal memperbarui profil. Silakan cek kembali.')
+    else:
+        # Tampilan awal (GET)
+        u_form = UserForm(instance=request.user)
+        u_form.fields['password'].initial = "" # Kosongkan field password di UI
+        p_form = StudentProfileForm(instance=profile)
+
+    return render(request, 'students/profile.html', {
+        'u_form': u_form,
+        'p_form': p_form,
+        'profile': profile, # Kirim objek profile untuk preview foto
+    })
+
+@login_required
+def student_profile_update(request):
+    user = request.user
+    student_detail, _ = StudentProfile.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        u_form = UserForm(request.POST, instance=user)
+        p_form = StudentProfileForm(request.POST, request.FILES, instance=student_detail)
+
+        if u_form.is_valid() and p_form.is_valid():
+            user_obj = u_form.save(commit=False)
+            
+            # Ambil password dari input manual
+            new_password = u_form.cleaned_data.get('password')
+            
+            if new_password and new_password.strip():
+                # User beneran ngetik password baru
+                user_obj.set_password(new_password)
+                user_obj.save()
+                update_session_auth_hash(request, user_obj)
+            else:
+                # USER TIDAK ISI PASSWORD:
+                # Ambil password (hash) yang sudah ada di DB agar tidak tertimpa
+                user_obj.password = User.objects.get(pk=user.pk).password
+                user_obj.save()
+
+            p_form.save()
+            messages.success(request, 'Profil berhasil diupdate!')
+            return redirect('students:profile')
+    else:
+        u_form = UserForm(instance=user)
+        p_form = StudentProfileForm(instance=student_detail)
+
+    return render(request, 'students/profile.html', {
+        'u_form': u_form,
+        'p_form': p_form,
+    })
 
 class StudentListView(RoleRequiredMixin, ListView):
     model = Student

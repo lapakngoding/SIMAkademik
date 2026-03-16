@@ -1,6 +1,10 @@
 # students/models.py
 import datetime
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class Registration(models.Model):
     GENDER_CHOICES = [
@@ -61,4 +65,25 @@ class Student(models.Model):
         blank=True
     )
     status = models.CharField(max_length=20, default='active')
+
+class StudentProfile(models.Model):
+    GENDER_CHOICES = (
+        ('L', 'Laki-laki'),
+        ('P', 'Perempuan'),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+
+    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, related_name='student_profile')
+    nama_lengkap = models.CharField(max_length=255)
+    jenis_kelamin = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
+    nik = models.CharField(max_length=16, blank=True)
+    nisn = models.CharField(max_length=20, unique=True)
+    foto = models.ImageField(upload_to='photos/students/', blank=True, null=True)
+    ijazah = models.FileField(upload_to='documents/students/ijazah/', null=True, blank=True)
+    tempat_lahir = models.CharField(max_length=100, blank=True)
+    tanggal_lahir = models.DateField(null=True, blank=True)
+    alamat_rumah = models.TextField(blank=True)
+    no_hp = models.CharField(max_length=20, blank=True)
+    email_pribadi = models.EmailField(blank=True)
 

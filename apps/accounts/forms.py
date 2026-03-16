@@ -14,7 +14,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name']
+        fields = ['username', 'email']
         widgets = {field: forms.TextInput(attrs={'class': 'form-control'}) for field in fields}
 
 # Form untuk data yang ADA di SEMUA orang

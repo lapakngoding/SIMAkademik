@@ -1,3 +1,4 @@
+#apps/accounts/views.py
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash # Penting agar tidak logout pas ganti password
@@ -45,54 +46,75 @@ def unlock_screen(request):
 def profile_view(request):
     school_info = SchoolProfile.objects.first()
     user = request.user
+    # Ambil Profile Dasar
     profile, _ = UserProfile.objects.get_or_create(user=user)
     
-    # Inisialisasi variabel detail
+    # Ambil Detail Spesifik
     teacher_detail = None
     student_detail = None
-    profile_form = None
-
-    # Logika Percabangan Role
     if user.role == 'teacher':
         teacher_detail, _ = TeacherProfile.objects.get_or_create(user_profile=profile)
-        # Jika POST, gunakan TeacherProfileForm
-        if request.method == 'POST':
-            profile_form = TeacherProfileForm(request.POST, request.FILES, instance=teacher_detail)
-        else:
-            profile_form = TeacherProfileForm(instance=teacher_detail)
-
+        detail_instance = teacher_detail
+        FormClass = TeacherProfileForm
     elif user.role == 'student':
         student_detail, _ = StudentProfile.objects.get_or_create(user_profile=profile)
-        # Jika POST, gunakan StudentProfileForm
-        if request.method == 'POST':
-            profile_form = StudentProfileForm(request.POST, request.FILES, instance=student_detail)
-        else:
-            profile_form = StudentProfileForm(instance=student_detail)
+        detail_instance = student_detail
+        FormClass = StudentProfileForm
+    else:
+        detail_instance = None
+        FormClass = None
 
     if request.method == 'POST':
         u_form = UserForm(request.POST, instance=user)
+        # PENTING: Tambahkan request.FILES di base_form
         base_form = BaseProfileForm(request.POST, request.FILES, instance=profile)
         
-        # Validasi (profile_form akan menyesuaikan form apa yang diisi di atas)
-        is_sub_profile_valid = profile_form.is_valid() if profile_form else True
-        
-        if u_form.is_valid() and base_form.is_valid() and is_sub_profile_valid:
-            u_form.save()
+        profile_form = None
+        if FormClass:
+            profile_form = FormClass(request.POST, request.FILES, instance=detail_instance)
+
+        # Cek Validasi
+        is_sub_valid = profile_form.is_valid() if profile_form else True
+
+        if u_form.is_valid() and base_form.is_valid() and is_sub_valid:
+            # SAVE USER DENGAN PROTEKSI PASSWORD
+            user_obj = u_form.save(commit=False)
+            password = u_form.cleaned_data.get('password')
+            if password: 
+                user_obj.set_password(password)
+            user_obj.save()
+            
+            # Update session supaya TIDAK LOGOUT
+            update_session_auth_hash(request, user_obj)
+
+            # SAVE PROFILE (Tempat lahir, tgl lahir, dll)
             base_form.save()
+
+            # SAVE DETAIL (Foto, NIP/NISN)
             if profile_form:
                 profile_form.save()
+
             messages.success(request, 'Profil berhasil diperbarui!')
             return redirect('accounts:profile')
+        else:
+            print(u_form.errors, base_form.errors) # Cek error di terminal
+            messages.error(request, 'Gagal simpan. Periksa kembali data Anda.')
+    
     else:
+        # GET REQUEST
         u_form = UserForm(instance=user)
+        u_form.fields['password'].initial = ""
         base_form = BaseProfileForm(instance=profile)
+        profile_form = FormClass(instance=detail_instance) if FormClass else None
 
     return render(request, 'accounts/profile.html', {
         'u_form': u_form,
         'base_form': base_form,
-        'profile_form': profile_form, # Ini bisa berisi form Guru atau Siswa
+        'profile_form': profile_form,
         'profile': profile,
         'school': school_info,
+        'teacher_detail': teacher_detail, # Pastikan ini dikirim
+        'student_detail': student_detail, # Pastikan ini dikirim
     })
 
 # LIST GURU
