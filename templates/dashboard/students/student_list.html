@@ -1,0 +1,132 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-header">
+    <div class="container-fluid">
+        {# Bagian Pesan Notifikasi #}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5>
+                        <i class="icon fas {% if message.tags == 'success' %}fa-check{% else %}fa-info-circle{% endif %}"></i> 
+                        Notifikasi
+                    </h5>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Manajemen Siswa</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Daftar Seluruh Siswa</h3>
+                <div class="card-tools">
+                    <a href="{% url 'students:student_create' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Tambah Siswa Baru
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr class="bg-light">
+                            <th style="width: 50px" class="text-center">No</th>
+                            <th>Foto</th>
+                            <th>Nama Lengkap</th>
+                            <th>NISN</th>
+                            <th>Kelas</th>
+                            <th>Status Akademik</th>
+                            <th>User Login</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td>
+                                {% if student.foto %}
+                                    <img src="{{ student.foto.url }}" class="img-circle elevation-1" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #ddd;">
+                                {% else %}
+                                    <img src="{% static 'img/gurulaki.jpg' %}" class="img-circle elevation-1" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #ddd;">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>{{ student.nama_lengkap }}</strong><br>
+                                <small class="text-muted">Username: {{ student.user.username }}</small>
+                            </td>
+                            <td><span class="badge badge-light border">{{ student.nisn|default:"-" }}</span></td>
+                            <td>{{ student.classroom|default:"<span class='text-danger'>Belum Ada Kelas</span>"|safe }}</td>
+                            <td>
+                                {% if student.status_akademik == 'aktif' %}
+                                    <span class="badge badge-success">Aktif</span>
+                                {% elif student.status_akademik == 'lulus' %}
+                                    <span class="badge badge-info">Lulus</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">{{ student.status_akademik|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if student.user.is_active %}
+                                    <i class="fas fa-check-circle text-success"></i> Aktif
+                                {% else %}
+                                    <i class="fas fa-times-circle text-danger"></i> Non-Aktif
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a href="{% url 'accounts:student_edit' student.user.id %}" class="btn btn-warning btn-sm" title="Edit Data">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{% url 'accounts:student_delete' student.user.id %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Suhu yakin ingin menghapus data {{ student.nama_lengkap }}?')" title="Hapus Data">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <img src="{% static 'dist/img/no-data.png' %}" style="width: 100px; opacity: 0.5;"><br>
+                                <p class="mt-2 text-muted">Belum ada data siswa yang tersimpan.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if is_paginated %}
+            <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-right">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                    {% endif %}
+                    
+                    <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.has_next_page_number }}">&raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

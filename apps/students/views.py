@@ -1,19 +1,21 @@
 # apps/students/views.py
+from django.urls import reverse_lazy
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.db import transaction
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 
 # Import dari aplikasi sendiri
-from .models import Student, Registration, StudentProfile
-from .forms import StudentProfileForm
+from .models import Registration, StudentProfile
+from .forms import StudentProfileForm, StudentCreateForm
 
 # Import dari aplikasi lain
 from apps.accounts.forms import UserForm
 from apps.accounts.mixins import RoleRequiredMixin
-from apps.website.models import SchoolProfile
+#from apps.website.models import SchoolProfile
 from apps.academics.models import Classroom
 
 # Definisi User
@@ -163,10 +165,15 @@ def student_profile_update(request):
     })
 
 class StudentListView(RoleRequiredMixin, ListView):
-    model = Student
-    template_name = 'students/student_list.html'
+    model = StudentProfile
+    template_name = 'dashboard/students/student_list.html'
     context_object_name = 'students'
-    required_role = 'operator'
+    required_role = 'admin'
+
+    def get_queryset(self):
+        # HANYA panggil yang ada. Jika 'user' belum ada di model Student, hapus 'user'
+        # Cukup gunakan select_related('classroom') jika itu satu-satunya relasi
+        return StudentProfile.objects.select_related('user','classroom').all()
 
 def registration_detail(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
@@ -174,5 +181,22 @@ def registration_detail(request, pk):
         'reg': registration,
         'title': f'Detail Pendaftaran - {registration.full_name}'
     })
+
+class StudentCreateView(RoleRequiredMixin, CreateView):
+    model = StudentProfile
+    form_class = StudentCreateForm
+    template_name = 'dashboard/students/student_form.html'
+    success_url = reverse_lazy('students:student_list') # Balik ke daftar siswa
+    required_role = ['admin', 'operator']
+
+    def form_valid(self, form):
+        messages.success(self.request, "Data siswa berhasil ditambahkan!")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Waduh, ada yang salah input tuh. Cek lagi ya!")
+        print("DEBUG FORM ERRORS:", form.errors)
+        return super().form_invalid(form)
+
 
 

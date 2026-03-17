@@ -5,34 +5,45 @@
   </a>
 </li>
 
-<li class="nav-item {% if 'teacher' in request.path or 'student' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link {% if 'teacher' in request.path or 'student' in request.path %}active{% endif %}">
-    <i class="nav-icon fas fa-users"></i>
-    <p>
-      Manajemen User
-      <i class="right fas fa-angle-left"></i>
-    </p>
-  </a>
+    <!-- Menu Siswa -->
 
-  <ul class="nav nav-treeview">
-    <li class="nav-item">
-      <a href="{% url 'accounts:teacher_list' %}" 
-           class="nav-link {% if 'teacher' in request.path %}text-white font-weight-bold{% else %}text-muted{% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Guru</p>
-        </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if 'student' in request.path %}text-white font-weight-bold{% endif %}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>Siswa</p>
-      </a>
-    </li>
-    <li class="nav-item">
-    <a href="{% url 'students:registration_list' %}" class="nav-link {% if 'registrations' in request.path %}active{% endif %}">
-        <i class="fas fa-clipboard-list nav-icon"></i>
-        <p>Pendaftar Baru</p>
-    </a>
-</li>
-  </ul>
+        <li class="nav-item">
+          <a href="{% url 'students:student_list' %}" 
+             class="nav-link {% if 'student_list' in request.path %}active{% endif %}">
+            <i class="fas fa-user-graduate nav-icon"></i>
+            <p>Data Siswa</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" 
+             class="nav-link {% if 'attendance' in request.path %}active{% endif %}">
+            <i class="fas fa-calendar-check nav-icon"></i>
+            <p>Absensi</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" 
+             class="nav-link {% if 'grade' in request.path %}active{% endif %}">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <p>Nilai</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" 
+             class="nav-link {% if 'schedule' in request.path %}active{% endif %}">
+            <i class="fas fa-clock nav-icon"></i>
+            <p>Jadwal</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" 
+             class="nav-link {% if 'alumni' in request.path %}active{% endif %}">
+            <i class="fas fa-user-check nav-icon"></i>
+            <p>Alumni</p>
+          </a>
+        </li>
 </li>

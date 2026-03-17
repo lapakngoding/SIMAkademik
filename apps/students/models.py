@@ -1,4 +1,5 @@
 # students/models.py
+from django.conf import settings
 import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -55,16 +56,6 @@ class Registration(models.Model):
             
         super(Registration, self).save(*args, **kwargs)
 
-class Student(models.Model):
-    student_number = models.CharField(max_length=30, unique=True)
-    full_name = models.CharField(max_length=100)
-    classroom = models.ForeignKey(
-        'academics.Classroom',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
-    status = models.CharField(max_length=20, default='active')
 
 class StudentProfile(models.Model):
     GENDER_CHOICES = (
@@ -83,7 +74,20 @@ class StudentProfile(models.Model):
     ijazah = models.FileField(upload_to='documents/students/ijazah/', null=True, blank=True)
     tempat_lahir = models.CharField(max_length=100, blank=True)
     tanggal_lahir = models.DateField(null=True, blank=True)
+    nama_ibu_kandung = models.CharField(max_length=100, blank=True)
     alamat_rumah = models.TextField(blank=True)
     no_hp = models.CharField(max_length=20, blank=True)
     email_pribadi = models.EmailField(blank=True)
+    status_akademik = models.CharField(
+        max_length=20, 
+        choices=[('aktif', 'Aktif'), ('lulus', 'Lulus'), ('drop', 'Putus Sekolah')],
+        default='aktif'
+    )
+    classroom = models.ForeignKey(
+        'academics.Classroom', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='students'
+    )
 
