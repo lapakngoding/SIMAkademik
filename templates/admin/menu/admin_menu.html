@@ -16,7 +16,7 @@
 
   <ul class="nav nav-treeview">
     <li class="nav-item">
-      <a href="{% url 'accounts:teacher_list' %}" 
+      <a href="{% url 'teachers:teacher_list' %}" 
          class="nav-link {% if 'teacher' in request.path %}active{% endif %}">
             <i class="fas fa-chalkboard-teacher nav-icon"></i>
             <p {% if 'teacher' in request.path %}class="font-weight-bold"{% endif %}>Guru</p>

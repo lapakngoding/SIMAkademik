@@ -23,7 +23,7 @@ app_name = 'students'
 
 urlpatterns = [
     path('student/', StudentListView.as_view(), name='student_list'),
-    path('tambah/', StudentCreateView.as_view(), name='student_create'),
+    path('add/student', StudentCreateView.as_view(), name='student_create'),
     path('profile/', views.profile_view, name='profile'),
     #path('daftar/', views.registration_create, name='registration_create'),
     path('registrations/', views.registration_list, name='registration_list'),
