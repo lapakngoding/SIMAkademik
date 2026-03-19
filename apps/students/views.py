@@ -4,9 +4,10 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.db import transaction
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 
 # Import dari aplikasi sendiri
 from .models import Registration, StudentProfile
@@ -197,6 +198,18 @@ class StudentCreateView(RoleRequiredMixin, CreateView):
         messages.error(self.request, "Waduh, ada yang salah input tuh. Cek lagi ya!")
         print("DEBUG FORM ERRORS:", form.errors)
         return super().form_invalid(form)
+
+class StudentUpdateView(SuccessMessageMixin, RoleRequiredMixin, UpdateView):
+    model = StudentProfile
+    form_class = StudentCreateForm # Gunakan form yang sama dengan Create
+    template_name = 'dashboard/students/student_form.html' # Pakai template yang sama (reusable)
+    success_url = reverse_lazy('students:student_list')
+    required_role = 'admin'
+    success_message = "Data siswa %(nama_lengkap)s berhasil diperbarui!"
+
+    def get_object(self, queryset=None):
+        # Mengambil data berdasarkan User ID agar sesuai dengan URL accounts:student_edit
+        return StudentProfile.objects.get(user_id=self.kwargs['pk'])
 
 
 

@@ -63,8 +63,7 @@ class StudentProfile(models.Model):
         ('P', 'Perempuan'),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
-
+    
     user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, related_name='student_profile')
     nama_lengkap = models.CharField(max_length=255)
     jenis_kelamin = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
