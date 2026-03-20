@@ -87,10 +87,10 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <a href="{% url 'teachers:student_edit' teacher.user.id %}" class="btn btn-warning btn-sm" title="Edit Data">
+                                    <a href="{% url 'teachers:teacher_edit' teacher.user.id %}" class="btn btn-warning btn-sm" title="Edit Data">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{% url 'teachers:student_delete' teacher.user.id %}" method="post" class="d-inline">
+                                    <form action="{% url 'teachers:teacher_delete' teacher.user.id %}" method="post" class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Suhu yakin ingin menghapus data {{ teacher.nama_lengkap }}?')" title="Hapus Data">
                                             <i class="fas fa-trash"></i>

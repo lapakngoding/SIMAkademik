@@ -1,0 +1,97 @@
+{% extends 'admin/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+        <h1>Tambah Guru Baru</h1>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5>
+                        <i class="icon fas {% if message.tags == 'success' %}fa-check{% else %}fa-ban{% endif %}"></i> 
+                        Info Sistem
+                    </h5>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Form Data Guru</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Akun Login</h5>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.username|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.password|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Data Pribadi & Sekolah</h5>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.nama_lengkap|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.tempat_lahir|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.tanggal_lahir|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.nik|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.jenis_kelamin|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.nip_nuptk|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.no_hp|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.nama_ibu_kandung|as_crispy_field }}
+                        </div>
+                        <div class="col-md-12">
+                            {{ form.alamat_rumah|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.foto|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.classroom|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.status|as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
+                    <a href="{% url 'teachers:teacher_list' %}" class="btn btn-default">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

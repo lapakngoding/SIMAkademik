@@ -1,0 +1,369 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Profil Saya{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show shadow-sm">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <i class="icon fas fa-check"></i> {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+ <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+    <div class="card card-widget widget-user shadow-sm">
+        <div class="widget-user-header bg-info p-4"> <div class="d-flex align-items-center">
+            <div class="widget-user-image-left mr-4 position-relative">
+                <img id="avatar-preview" class="elevation-3"
+                     src="{% if profile.foto %}{{ profile.foto.url }}{% else %}{% static 'img/gurulaki.jpg' %}{% endif %}"
+                     style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff; border-radius: 20px;">
+                
+                <div style="display: none;">
+                    {% render_field p_form.foto id="input-foto" accept="image/*" %}
+                </div>
+
+                <button type="button" onclick="document.getElementById('input-foto').click();" 
+                        class="btn btn-xs btn-light position-absolute shadow-sm" 
+                        style="bottom: -5px; right: -5px; border-radius: 50%; width: 30px; height: 30px;">
+                    <i class="fas fa-camera text-muted"></i>
+                </button>
+            </div>
+
+                <div class="widget-user-info-right text-white">
+                    <h2 class="widget-user-username mb-1" style="font-weight: 700;">
+                        {{ profile.nama_lengkap|default:request.user.username }}
+                    </h2>
+                    <h5 class="widget-user-desc mb-0" style="opacity: 0.9; font-weight: 300;">
+                        <span class="badge badge-light px-3 py-2" style="color: #17a2b8;">
+                            <i class="fas fa-id-badge mr-1"></i> {{ request.user.role|upper|default:"USER" }}
+                        </span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer py-3 bg-light">
+            <div class="row text-center">
+                <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                        <h5 class="description-header text-primary">{{ request.user.username }}</h5>
+                        <span class="description-text small text-muted">USERNAME</span>
+                    </div>
+                </div>
+                <div class="col-sm-4 border-right">
+                    <div class="description-block">
+                        <h5 class="description-header text-primary text-truncate px-2">{{ request.user.email|default:"-" }}</h5>
+                        <span class="description-text small text-muted">EMAIL SISTEM</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="description-block">
+                        <h5 class="description-header text-primary">{{ request.user.last_login|date:"d M Y H:i" }}</h5>
+                        <span class="description-text small text-muted">LOGIN TERAKHIR</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-primary card-outline card-outline-tabs shadow-sm">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="profileTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#data-pribadi">
+                        <i class="fas fa-user-edit mr-1 text-primary"></i> Data Pribadi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#akademik">
+                        <i class="fas fa-graduation-cap mr-1 text-success"></i> Data Akademik
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#akun">
+                        <i class="fas fa-user-lock mr-1 text-danger"></i> Akun & Keamanan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#dokumen">
+                        <i class="fas fa-folder-open mr-1 text-warning"></i> Dokumen
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body mt-3">
+           
+                <div class="tab-content">
+
+                    <div class="tab-pane fade show active" id="data-pribadi">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card mr-1 text-muted"></i> Nama Lengkap</label>
+                                    {% render_field p_form.nama_lengkap class="form-control" placeholder="Input Nama Lengkap" %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-user mr-1 text-muted"></i> Nama Ibu</label>
+                                    {% render_field p_form.nama_ibu_kandung class="form-control" placeholder="Ibu Kandung" %}
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-fingerprint mr-1 text-muted"></i> NIK</label>
+                                    {% render_field p_form.nik class="form-control" placeholder="16 Digit NIK" %}
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-venus-mars mr-1 text-muted"></i> Jenis Kelamin</label>
+                                    {% render_field p_form.jenis_kelamin class="form-control select2" %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Tempat Lahir</label>
+                                            {% render_field p_form.tempat_lahir class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Tanggal Lahir</label>
+                                            {% render_field p_form.tanggal_lahir class="form-control" type="date" %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone mr-1 text-muted"></i> No. HP (WhatsApp)</label>
+                                    {% render_field p_form.no_hp class="form-control" placeholder="08xxx" %}
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope mr-1 text-muted"></i> Email Pribadi</label>
+                                    {% render_field p_form.email_pribadi class="form-control" placeholder="email@gmail.com" %}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt mr-1 text-muted"></i> Domisili / Alamat Rumah</label>
+                                    {% render_field p_form.alamat_rumah class="form-control" rows="2" %}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save mr-1"></i> Simpan Perubahan Data Pribadi
+                        </button>
+                    </div>
+
+                    <div class="tab-pane fade" id="akademik">
+                        {% if p_form %}
+                            <div class="callout callout-info mb-4 shadow-sm border-left">
+                                <h5><i class="fas fa-info-circle text-info"></i> Informasi Akademik</h5>
+                                <p class="text-muted small">Data ini adalah informasi resmi Suhu di sekolah.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 border-right">
+                                    <div class="form-group">
+                                        <label class="text-success font-weight-bold"><i class="fas fa-fingerprint mr-1"></i> NIP NUPTK</label>
+                                        {% render_field p_form.nip_nuptk class="form-control" placeholder="Masukkan NISN" %}
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="text-success font-weight-bold"><i class="fas fa-door-open mr-1"></i> Kelas</label>
+                                        {% render_field p_form.nama class="form-control select2" %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="text-success font-weight-bold"><i class="fas fa-book mr-1"></i> Jurusan</label>
+                                        {% render_field p_form.jurusan class="form-control select2" %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="text-muted font-weight-bold"><i class="fas fa-calendar-alt mr-1"></i> Tahun Angkatan</label>
+                                        {% render_field p_form.angkatan class="form-control" placeholder="Contoh: 2024" %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="mt-4">
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-success px-5 shadow">
+                                    <i class="fas fa-save mr-1"></i> Simpan Data Akademik
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    
+<div class="tab-pane fade" id="akun">
+    <div class="callout callout-warning mb-4 shadow-sm border-left">
+        <h5><i class="fas fa-shield-alt text-warning"></i> Keamanan Akun</h5>
+        <p class="text-muted small">Kelola informasi login Anda. Password hanya akan berubah jika Anda mengisi kolom password di bawah.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 border-right">
+            <div class="form-group">
+                <label class="text-danger font-weight-bold"><i class="fas fa-user-tag mr-1"></i> Username</label>
+                {% render_field u_form.username class="form-control" %}
+                <small class="text-muted">Username digunakan untuk login ke sistem.</small>
+            </div>
+            
+            <div class="form-group">
+                <label class="text-danger font-weight-bold"><i class="fas fa-envelope mr-1"></i> Email Sistem</label>
+                {% render_field u_form.email class="form-control" %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="text-danger font-weight-bold"><i class="fas fa-key mr-1"></i> Password Baru</label>
+                {% render_field u_form.password class="form-control" placeholder="Kosongkan jika tidak ingin ganti" %}
+                <small class="text-info">
+                    <i class="fas fa-info-circle"></i> Biarkan kosong jika tetap menggunakan password lama.
+                </small>
+            </div>
+            
+            <div class="alert alert-light border mt-2">
+                <ul class="mb-0 small text-muted">
+                    <li>Minimal 8 Karakter</li>
+                    <li>Kombinasi Huruf & Angka</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-4">
+    <div class="text-right">
+        <button type="submit" class="btn btn-danger px-5 shadow">
+            <i class="fas fa-lock mr-1"></i> Update Keamanan Akun
+        </button>
+    </div>
+</div>
+
+                    
+<div class="tab-pane fade" id="dokumen">
+    <div class="callout callout-warning mb-4 shadow-sm border-left">
+        <h5><i class="fas fa-file-upload text-warning"></i> Arsip Dokumen Digital</h5>
+        <p class="text-muted small">Unggah dokumen pendukung dalam format <strong>PDF atau Gambar (JPG/PNG)</strong>. Maksimal 2MB per file.</p>
+    </div>
+
+    <div class="row">
+        {% if profile_form %}
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold">Scan KTP</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            {% render_field profile_form.scan_ktp %}
+                            <label class="custom-file-label">Pilih file KTP...</label>
+                        </div>
+                    </div>
+                    {% if profile_form.instance.scan_ktp %}
+                        <a href="{{ profile_form.instance.scan_ktp.url }}" target="_blank" class="btn btn-xs btn-info mt-2">
+                            <i class="fas fa-eye"></i> Lihat KTP Terunggah
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold">Scan Kartu Keluarga (KK)</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            {% render_field profile_form.scan_kk %}
+                            <label class="custom-file-label">Pilih file KK...</label>
+                        </div>
+                    </div>
+                    {% if profile_form.instance.scan_kk %}
+                        <a href="{{ profile_form.instance.scan_kk.url }}" target="_blank" class="btn btn-xs btn-info mt-2">
+                            <i class="fas fa-eye"></i> Lihat KK Terunggah
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-3">
+                <div class="form-group">
+                    <label class="font-weight-bold">Scan Ijazah Terakhir</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            {% render_field profile_form.ijazah %}
+                            <label class="custom-file-label">Pilih file Ijazah...</label>
+                        </div>
+                    </div>
+                    {% if profile_form.instance.ijazah %}
+                        <a href="{{ profile_form.instance.ijazah.url }}" target="_blank" class="btn btn-xs btn-info mt-2">
+                            <i class="fas fa-eye"></i> Lihat Ijazah
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mt-3">
+                <div class="form-group">
+                    <label class="font-weight-bold">Scan SK Pengangkatan</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            {% render_field profile_form.scan_sk %}
+                            <label class="custom-file-label">Pilih file SK...</label>
+                        </div>
+                    </div>
+                    {% if profile_form.instance.scan_sk %}
+                        <a href="{{ profile_form.instance.scan_sk.url }}" target="_blank" class="btn btn-xs btn-info mt-2">
+                            <i class="fas fa-eye"></i> Lihat SK
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-folder-minus fa-3x text-muted mb-3"></i>
+                <p>Fitur dokumen belum tersedia untuk tipe akun Anda.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <hr class="mt-4">
+    <div class="text-right">
+        <button type="submit" class="btn btn-warning px-5 shadow">
+            <i class="fas fa-upload mr-1"></i> Unggah Semua Dokumen
+        </button>
+    </div>
+</div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script agar nama file muncul di input custom-file AdminLTE
+    $(document).ready(function () {
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    });
+</script>
+<script>
+    document.getElementById('input-foto').onchange = function (evt) {
+        const [file] = this.files
+        if (file) {
+            // 1. Tampilkan preview
+            document.getElementById('avatar-preview').src = URL.createObjectURL(file)
+            
+            // 2. OTOMATIS SUBMIT FORM (Tambahkan baris ini)
+            // Ini akan memicu fungsi profile_view di views.py untuk menyimpan foto
+            this.form.submit(); 
+        }
+    }
+</script>
+{% endblock %}

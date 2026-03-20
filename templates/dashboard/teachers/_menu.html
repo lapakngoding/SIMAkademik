@@ -1,32 +1,63 @@
 <li class="nav-item">
-  <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}text-white font-weight-bold{% endif %}">
+  <a href="{% url 'dashboard' %}" 
+     class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}text-white font-weight-bold{% endif %}">
     <i class="nav-icon fas fa-home"></i>
     <p>Dashboard</p>
   </a>
 </li>
 
-<li class="nav-item {% if 'teacher' in request.path or 'student' in request.path %}menu-open{% endif %}">
-  <a href="#" class="nav-link {% if 'teacher' in request.path or 'student' in request.path %}active{% endif %}">
-    <i class="nav-icon fas fa-users"></i>
-    <p>
-      Manajemen User
-      <i class="right fas fa-angle-left"></i>
-    </p>
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'my-classes' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-chalkboard"></i>
+    <p>Kelas Saya</p>
   </a>
+</li>
 
-  <ul class="nav nav-treeview">
-    <li class="nav-item">
-      <a href="{% url 'accounts:teacher_list' %}" 
-           class="nav-link {% if 'teacher' in request.path %}text-white font-weight-bold{% else %}text-muted{% endif %}">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Guru</p>
-        </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link {% if 'student' in request.path %}text-white font-weight-bold{% endif %}">
-        <i class="far fa-circle nav-icon"></i>
-        <p>Siswa</p>
-      </a>
-    </li>
-  </ul>
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'schedule' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-calendar-alt"></i>
+    <p>Jadwal Mengajar</p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'attendance' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-user-check"></i>
+    <p>Absensi Siswa</p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'grades' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-clipboard-list"></i>
+    <p>Nilai Siswa</p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'materials' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-book"></i>
+    <p>Materi & Tugas</p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'announcements' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-bullhorn"></i>
+    <p>Pengumuman</p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="#" 
+     class="nav-link {% if 'profile' in request.path %}text-white font-weight-bold{% endif %}">
+    <i class="nav-icon fas fa-user"></i>
+    <p>Profil Saya</p>
+  </a>
 </li>

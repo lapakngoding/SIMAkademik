@@ -95,9 +95,18 @@ def profile_view(request):
         u_form.fields['password'].initial = "" # Kosongkan field password di UI
         p_form = TeacherProfileForm(instance=profile)
 
-    return render(request, 'teachers/profile.html', {
+    return render(request, 'dashboard/teachers/profile.html', {
         'u_form': u_form,
         'p_form': p_form,
         'profile': profile, # Kirim objek profile untuk preview foto
     })
+
+@login_required
+def teacher_delete(request, pk):
+    teacher = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        teacher.delete()
+        messages.success(request, 'Guru berhasil dihapus!')
+        return redirect('teachers:teacher_list')
+    return render(request, 'teachers/teacher_confirm_delete.html', {'teacher': teacher})
 

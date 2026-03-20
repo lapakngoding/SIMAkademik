@@ -12,7 +12,7 @@
 
         {% if user.is_superuser %}
           {% include "admin/menu/admin_menu.html" %}
-        {% elif user.groups.first.name == "Teacher" %}
+        {% elif user.groups.first.name == "teacher" %}
           {% include "dashboard/teachers/_menu.html" %}
         {% else %}
           {% include "dashboard/students/_menu.html" %}
