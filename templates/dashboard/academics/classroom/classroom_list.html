@@ -34,7 +34,13 @@
                     {% for room in classrooms %}
                     <tr>
                         <td><strong>{{ room.nama }}</strong></td>
-                        <td>{{ room.wali_kelas.get_full_name|default:room.wali_kelas.username }}</td>
+                        <td>
+                            {% if room.wali_kelas %}
+                                {{ room.wali_kelas.get_full_name|default:room.wali_kelas.username }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                         <td class="text-center">
                             <a href="{% url 'academics:classroom_edit' room.pk %}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i>

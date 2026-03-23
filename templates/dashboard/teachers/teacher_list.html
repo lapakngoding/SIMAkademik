@@ -57,7 +57,7 @@
                         <tr>
                             <td class="text-center">{{ forloop.counter }}</td>
                             <td>
-                                {% if student.foto %}
+                                {% if teacher.foto %}
                                     <img src="{{ teacher.foto.url }}" class="img-circle elevation-1" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #ddd;">
                                 {% else %}
                                     <img src="{% static 'img/gurulaki.jpg' %}" class="img-circle elevation-1" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid #ddd;">
