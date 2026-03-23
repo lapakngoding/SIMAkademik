@@ -17,11 +17,45 @@ from .forms import StudentProfileForm, StudentCreateForm
 from apps.accounts.forms import UserForm
 from apps.accounts.mixins import RoleRequiredMixin
 #from apps.website.models import SchoolProfile
-from apps.academics.models import Classroom
+from apps.academics.models import Classroom, Schedule
+from datetime import datetime
+from django.utils import timezone
 
 # Definisi User
-User = get_user_model()
+User = get_user_model() 
 
+
+@login_required
+def student_dashboard(request):
+    student = getattr(request.user, 'student_profile', None)
+
+    if not student:
+        return redirect('login')
+
+    # Hari lokal Django
+    today_en = timezone.localtime().strftime('%A')
+
+    day_map = {
+        'Monday': 'Senin',
+        'Tuesday': 'Selasa',
+        'Wednesday': 'Rabu',
+        'Thursday': 'Kamis',
+        'Friday': 'Jumat',
+        'Saturday': 'Sabtu',
+        'Sunday': 'Minggu'
+    }
+
+    today = day_map.get(today_en)
+
+    schedules = Schedule.objects.filter(
+        classroom=student.classroom,
+        day__iexact=today
+    )
+
+    return render(request, 'dashboard/students/student.html', {
+        'student': student,
+        'schedules': schedules
+    })
 @transaction.atomic
 def accept_student(request, pk):
     registration = get_object_or_404(Registration, pk=pk)
@@ -210,6 +244,8 @@ class StudentUpdateView(SuccessMessageMixin, RoleRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         # Mengambil data berdasarkan User ID agar sesuai dengan URL accounts:student_edit
         return StudentProfile.objects.get(user_id=self.kwargs['pk'])
+
+
 
 
 

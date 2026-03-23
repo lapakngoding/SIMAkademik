@@ -11,6 +11,21 @@
             <p>NISN: {{ detail.nisn }}</p>
             <p>Kelas: {{ detail.kelas }}</p>
         </div>
+        {% if schedules %}
+          {% for item in schedules %}
+            <tr>
+              <td>{{ item.start_time }} - {{ item.end_time }}</td>
+              <td>{{ item.subject }}</td>
+              <td>Pak {{ item.teacher }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3">
+              Tidak ada jadwal untuk hari ini ({{ profile.classroom }})
+            </td>
+          </tr>
+        {% endif %}
     </section>
 </div>
 {% endblock %}

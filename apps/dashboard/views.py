@@ -6,6 +6,8 @@ from apps.students.models import Registration
 from django.db.models import Count
 from django.db.models.functions import ExtractMonth
 import calendar
+from django.utils import timezone
+from apps.academics.models import Schedule
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
@@ -59,8 +61,30 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 # Kita buatkan variabel 'detail' agar template Suhu tidak error
                 context['detail'] = {
                     'nisn': profile.nisn,
-                    'kelas': profile.classroom.nama if profile.classroom else "Belum Ada Kelas",
+                    'kelas': profile.classroom.name if profile.classroom else "Belum Ada Kelas",
                 }
+
+                today_en = timezone.localtime().strftime('%A')
+
+                day_map = {
+                    'Monday': 'Senin',
+                    'Tuesday': 'Selasa',
+                    'Wednesday': 'Rabu',
+                    'Thursday': 'Kamis',
+                    'Friday': 'Jumat',
+                    'Saturday': 'Sabtu',
+                    'Sunday': 'Minggu'
+                }
+
+                today = day_map.get(today_en)
+
+                schedules = Schedule.objects.filter(
+                    classroom=profile.classroom,
+                    day__iexact=today
+                )
+                
+                context['schedules'] = schedules
+
             elif user.role == 'teacher' and profile:
                 context['detail'] = getattr(profile, 'teacher_detail', None)
                 

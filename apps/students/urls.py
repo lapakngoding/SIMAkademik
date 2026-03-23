@@ -22,6 +22,7 @@ from . import views
 app_name = 'students'
 
 urlpatterns = [
+    path('dashboard/', views.student_dashboard, name='student_dashboard'),
     path('student/', StudentListView.as_view(), name='student_list'),
     path('add/student', StudentCreateView.as_view(), name='student_create'),
     path('profile/', views.profile_view, name='profile'),
