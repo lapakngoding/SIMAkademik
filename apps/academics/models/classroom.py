@@ -4,6 +4,13 @@ from apps.accounts.models import User # Mengacu ke Custom User Anda
 
 class Classroom(models.Model):
     name = models.CharField(max_length=50)  # contoh: 6A
+    wali_kelas = models.ForeignKey(
+       'teachers.Teacher',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='wali_kelas_di',
+    )
     level = models.CharField(max_length=10) # contoh: SD / SMP
     academic_year = models.CharField(max_length=20) # contoh: 2025/2026
 

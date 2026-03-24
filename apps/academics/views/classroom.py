@@ -10,15 +10,18 @@ class ClassroomListView(RoleRequiredMixin, ListView):
     template_name = 'dashboard/academics/classroom/classroom_list.html'
     context_object_name = 'classrooms'
 
+    def get_queryset(self):
+        return Classroom.objects.select_related('wali_kelas')
+
 class ClassroomCreateView(RoleRequiredMixin, CreateView):
     model = Classroom
-    fields = ['nama', 'wali_kelas']
+    fields = ['name', 'wali_kelas']
     template_name = 'dashboard/academics/classroom/classroom_form.html'
     success_url = reverse_lazy('academics:classroom_list')
 
 class ClassroomUpdateView(RoleRequiredMixin, UpdateView):
     model = Classroom
-    fields = ['nama', 'wali_kelas']
+    fields = ['name', 'wali_kelas']
     template_name = 'dashboard/academics/classroom/classroom_form.html'
     success_url = reverse_lazy('academics:classroom_list')
 
