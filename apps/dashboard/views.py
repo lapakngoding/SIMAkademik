@@ -8,6 +8,7 @@ from django.db.models.functions import ExtractMonth
 import calendar
 from django.utils import timezone
 from apps.academics.models import Schedule
+from collections import defaultdict
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
@@ -84,6 +85,22 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 )
                 
                 context['schedules'] = schedules
+
+                weekly_schedules = Schedule.objects.filter(
+                    classroom=profile.classroom
+                ).order_by('start_time')
+
+                # Struktur grid
+                grid = defaultdict(dict)
+
+                for s in weekly_schedules:
+                    time_range = f"{s.start_time.strftime('%H:%M')} - {s.end_time.strftime('%H:%M')}"
+                    grid[time_range][s.day] = s
+
+                context['schedule_grid'] = dict(grid)
+
+                # urutan hari
+                context['days'] = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
 
             elif user.role == 'teacher' and profile:
                 context['detail'] = getattr(profile, 'teacher_detail', None)
